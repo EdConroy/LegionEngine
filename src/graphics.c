@@ -171,7 +171,7 @@ Sprite *LoadSprite(char *filename,int sizex, int sizey)
     fprintf(stderr,"unable to load a vital sprite: %s\n",SDL_GetError());
     exit(0);
   }
-  SpriteList[i].image = SDL_DisplayFormat(temp);
+  SpriteList[i].image = SDL_DisplayFormatAlpha(temp);
   SDL_FreeSurface(temp);
   /*sets a transparent color for blitting.*/
   SDL_SetColorKey(SpriteList[i].image, SDL_SRCCOLORKEY , SDL_MapRGB(SpriteList[i].image->format, 255,255,255));
@@ -218,7 +218,7 @@ Sprite *LoadSwappedSprite(char *filename,int sizex, int sizey, int c1, int c2, i
         fprintf(stderr, "FAILED TO LOAD A VITAL Sprite.\n");
         exit(1);
   }
-  SpriteList[i].image = SDL_DisplayFormat(temp);
+  SpriteList[i].image = SDL_DisplayFormatAlpha(temp);
   SDL_FreeSurface(temp);
   /*sets a transparent color for blitting.*/
   SDL_SetColorKey(SpriteList[i].image, SDL_SRCCOLORKEY , SDL_MapRGB(SpriteList[i].image->format, 255,255,255));
@@ -741,7 +741,7 @@ void SwapSprite(SDL_Surface *sprite,int color1,int color2,int color3)
 /*this only handles the drawing and animation of.  Assuming you have a 16 by 16  tiled sprite sheet.  This will not handle input*/
 void InitMouse()
 {
-  Msprite = LoadSprite("images/mouse.png",16, 16);
+  Msprite = LoadSprite("images/StriderJump.png",183,138); 
   if(Msprite == NULL)fprintf(stdout,"mouse didn't load\n");
   Mouse.state = 0;
   Mouse.shown = 0;
@@ -753,11 +753,12 @@ void InitMouse()
      game content*/
 void DrawMouse()
 {
-  int mx,my;
-  SDL_GetMouseState(&mx,&my);
-  if(Msprite != NULL) DrawSprite(Msprite,screen,mx,my,Mouse.frame);
-  Mouse.frame = (Mouse.frame + 1)%16;
- Mouse.x = mx;
- Mouse.y = my;
+	int mx,my;
+	if(Msprite == NULL) return;
+	SDL_GetMouseState(&mx,&my);
+	DrawSprite(Msprite,screen,mx,my,Mouse.frame);
+	Mouse.frame = (Mouse.frame + 1)%10;
+	Mouse.x = mx;
+	Mouse.y = my;
 }
 
