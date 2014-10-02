@@ -30,7 +30,7 @@ void Parallax(Sprite* fst, Sprite* scd, SDL_Surface* screen, int x, int y)
 	}
 	for(int j = 0; j < 80; ++j)
 	{
-		DrawSprite(scd,screen,F_Bck.x + 64, 610, 0);
+		DrawSprite(scd,screen,F_Bck.x + 64, 610, 2);
 		F_Bck.last_x = F_Bck.x; 
 		F_Bck.x = F_Bck.last_x + 32;
 	}
