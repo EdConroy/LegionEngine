@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
   SDL_Surface *temp;
   SDL_Surface *bg;
   Sprite *tile;
+  Sprite *test;
   Fighter* f;
   Fighter* f2;
   int done;
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
   if(bg != NULL)
     SDL_BlitSurface(bg,NULL,buffer,NULL);
   tile = LoadSprite("images/32_32_16_2sprite.png",32,32);
+  test = LoadSprite("images/testbck.png",32,32);
   /*
   if(tile != NULL)for(i = 0;i < 12;i++)
   {
@@ -50,7 +52,7 @@ int main(int argc, char *argv[])
   {
     ResetBuffer();
 	SDL_PumpEvents();
-	//Parallax(tile,tile,screen,32,32);
+	Parallax(tile,test,screen,32,32);
 	keys = SDL_GetKeyState(&keyn);
 	FighterController(f,f2,screen,keys);
 	DrawHealthBar(f,screen,0,0);
