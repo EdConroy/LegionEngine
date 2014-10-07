@@ -40,6 +40,7 @@ void InitCombatant(Fighter* f)
 	f->health = 150;
 	f->x = 110;
 	f->y = 410;
+	f->vy = 50;
 	f->walk_acc = 5;
 	f->walk_speed = 10;
 	f->jump_speed = 50;
@@ -77,12 +78,21 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	keys = SDL_GetKeyState(&keyn);
 	if(keys[SDLK_RIGHT])
 	{
+		if(f1->x < 845)
+		{
 		f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
 		DrawSprite(f1->sprite,buffer,f1->x + f1->walk_acc, f1->y,F_Sprite.frame);
 		f1->last_x = f1->x;
 		f1->x = f1->last_x + f1->walk_acc;
 		f1->hitbox.x = f1->x;
 		frame_count = 10;
+		}
+		else
+		{
+			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
+			DrawSprite(f1->sprite,buffer,f1->x,f1->y, F_Sprite.frame);
+			frame_count = 3;
+		}
 	}
 	else if(keys[SDLK_DOWN])
 	{
@@ -92,12 +102,21 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	}
 	else if(keys[SDLK_LEFT])
 	{
+		if(f1->x > 0)
+		{
 		f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
 		DrawSprite(f1->sprite,buffer,f1->x - f1->walk_acc,f1->y,F_Sprite.frame);
 		f1->last_x = f1->x;
 		f1->x = f1->last_x - f1->walk_acc;
 		f1->hitbox.x = f1->x;
 		frame_count = 10;
+		}
+		else
+		{
+			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
+			DrawSprite(f1->sprite,buffer,f1->x,f1->y,F_Sprite.frame);
+			frame_count = 3;
+		}
 	}
 	else if(keys[SDLK_x])
 	{
@@ -164,21 +183,15 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	{
 		f1->sprite = LoadSprite("images/StriderJump.png",183,138);
 		DrawSprite(f1->sprite,buffer,f1->x, f1->y - f1->jump_speed,F_Sprite.frame);
-		f1->last_y = f1->y;
-		f1->y = f1->last_y - f1->jump_speed;
-		//f1->is_grounded = 0;
-		frame_count = 9;
-		/*
-		if(f1->y < 310 && f1->is_grounded == 0)
+		f1->y = f1->y + f1->vy;
+		f1->vy -= 1;
+		f1->hitbox.y = f1->y;
+		if(f1->y >= 410)
 		{
-			f1->last_y = f1->y;
-			if(f1->last_y < 410)
-			{
-				f1->y = f1->last_y + (f1->jump_speed + i);
-				++i;
-			}
+			f1->y = 410;
+			f1->vy = 5;
+			f1->hitbox.y = f1->y;
 		}
-		*/
 	}
 	else
 	{
@@ -198,12 +211,21 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
 	if(keys[SDLK_d])
 	{
+		if(f2->x < 845)
+		{
 		f2->sprite = LoadSprite("images/DoomWalkBckReversed.png",153,140);
 		DrawSprite(f2->sprite,buffer,f2->x + f2->walk_acc, f2->y,F_Sprite.player2_frame);
 		f2->last_x = f2->x;
 		f2->x = f2->last_x + f2->walk_acc;
 		f2->hitbox.x = f2->x;
 		player2_fc = 8;
+		}
+		else
+		{
+			f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
+			DrawSprite(f2->sprite,buffer,f2->x,f2->y,F_Sprite.frame);
+			player2_fc = 10;
+		}
 	}
 	else if(keys[SDLK_s])
 	{
@@ -213,12 +235,21 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	}
 	else if(keys[SDLK_a])
 	{
+		if(f2->x > 0)
+		{
 		f2->sprite = LoadSprite("images/DoomWalkFwdReversed.png",154,144);
 		DrawSprite(f2->sprite,buffer,f2->x - f2->walk_acc,f2->y,F_Sprite.player2_frame);
 		f2->last_x = f2->x;
 		f2->x = f2->last_x - f2->walk_acc;
 		f2->hitbox.x = f2->x;
 		player2_fc = 8;
+		}
+		else
+		{
+			f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
+			DrawSprite(f2->sprite,buffer,f2->x,f2->y,F_Sprite.frame);
+			player2_fc = 10;
+		}
 	}
 	else if(keys[SDLK_t])
 	{
@@ -271,18 +302,19 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	else if(keys[SDLK_w])
 	{
 		f2->sprite = LoadSprite("images/StriderJump.png",183,138);
-		DrawSprite(f2->sprite,buffer,f2->x, f2->y - f2->jump_speed,F_Sprite.player2_frame);
-		f2->last_y = f2->y;
-		f2->y = f2->last_y - f2->jump_speed;
-		player2_fc = 9;
-		/*
-		if(f2->y < 410 && f2->is_grounded == 0)
+		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
+		f2->y = f2->y + f2->vy;
+		f2->vy -= 1;
+		f2->hitbox.y = f2->y;
+		if(f2->y <= 410)
 		{
-			f2->last_y = f2->y;
-			f2->y = f2->last_y + (f2->jump_speed + i);
-			++i;
+			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
+			DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
+			f2->y = 410;
+			f2->vy = 0;
+			f2->hitbox.y = f2->y;
+			player2_fc = 3;
 		}
-		*/
 	}
 	else
 	{
