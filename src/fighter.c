@@ -49,12 +49,14 @@ void InitCombatant(Fighter* f)
 	f->hitbox.w = 180;
 	f->hitbox.h = 150;
 	f->is_grounded = 1;
+	f->flags = 0;
 }
 void InitCombatant2(Fighter* f)
 {
 	f->health = 150;
 	f->x = 310;
 	f->y = 410;
+	f->vy = 50;
 	f->walk_speed = 10;
 	f->walk_acc = 5;
 	f->jump_speed = 50;
@@ -64,15 +66,10 @@ void InitCombatant2(Fighter* f)
 	f->hitbox.h = 150;
 	f->is_grounded = 1;
 }
-void Block(Fighter* attacker, Fighter* defender, SDL_Surface *buffer)
-{
-	int been_hit = 0;
-	been_hit = AABB(attacker->hitbox,defender->hitbox,buffer);
-	if(been_hit == 1)
-		defender->health +=10;
-}
 void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* keys)
 {
+	f1->flags = FIGHTERFLAG_NOBLOCK;
+	f2->flags = FIGHTERFLAG_NOBLOCK;
 	int keyn, frame_count, player2_fc, i = 0;
 	f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
 	keys = SDL_GetKeyState(&keyn);
@@ -120,18 +117,21 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	}
 	else if(keys[SDLK_x])
 	{
+		f1->flags = FIGHTERFLAG_HITH;
 		int has_hit = 0;
 		f1->sprite = LoadSprite("images/StriderLightAttack.png",179,138);
 		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		has_hit = AABB(f1->hitbox,f2->hitbox,buffer);
-		if(has_hit == 1)
+		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
 		{
 			f2->health -= 15;
 		}
 		frame_count = 9;
+		//f1->flags &= ~FIGHTERFLAG_HITH;
 	}
 	else if(keys[SDLK_c])
 	{
+		f1->flags = FIGHTERFLAG_HITL;
 		int has_hit = 0;
 		f1->sprite = LoadSprite("images/StriderMediumAttack.png",198,140);
 		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
@@ -141,21 +141,25 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 			f2->health -= 25;
 		}
 		frame_count = 7;
+		//f1->flags &= ~FIGHTERFLAG_HITL;
 	}
 	else if(keys[SDLK_v])
 	{
+		f1->flags = FIGHTERFLAG_HITH;
 		int has_hit = 0;
 		f1->sprite = LoadSprite("images/StriderHeavyAttack.png",206,140);
 		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		has_hit = AABB(f1->hitbox,f2->hitbox,buffer);
-		if(has_hit == 1)
+		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
 		{
 			f2->health -= 50;
 		}
 		frame_count = 13;
+		//f1->flags &= ~FIGHTERFLAG_HITH;
 	}
 	else if(keys[SDLK_b])
 	{
+		f1->flags = FIGHTERFLAG_HITL;
 		int has_hit = 0;
 		f1->sprite = LoadSprite("images/StriderLauncherAttack.png",198,162);
 		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
@@ -165,20 +169,21 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 			f2->health -= 150;
 		}
 		frame_count = 8;
+		//f1->flags &= ~FIGHTERFLAG_HITL;
 	}
-	/*
 	else if(keys[SDLK_n])
 	{
-		Projectile *p;
-		InitProjectile(p,f1);
-		SDL_Rect test;
-		test.x = 210;
-		test.y = 410;
-		test.w = 150;
-		test.h = 180;
-		DrawProjectile(f1,p,test,buffer);
-	}
-	*/
+		f1->flags = FIGHTERFLAG_BLOCK;
+		int has_hit = AABB(f1->hitbox,f2->hitbox,buffer);
+		if(has_hit == 1 && f2->flags == FIGHTERFLAG_HITH)
+		{
+			if(f1->health <= 250)
+				f1->health +=10;
+			else
+				f1->health = 250;
+		}
+		//f1->flags &= ~FIGHTERFLAG_BLOCK;
+	}	
 	else if(keys[SDLK_UP])
 	{
 		f1->sprite = LoadSprite("images/StriderJump.png",183,138);
@@ -253,18 +258,21 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	}
 	else if(keys[SDLK_t])
 	{
+		f2->flags = FIGHTERFLAG_HITH;
 		int has_hit2 = 0;
 		f2->sprite = LoadSprite("images/DoomLightAttackReversed.png",215,134);
 		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
 		has_hit2 = AABB(f2->hitbox,f1->hitbox,buffer);
-		if(has_hit2 == 1)
+		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCK)
 		{
 			f1->health -= 15;
 		}
+		//f2->flags &= ~FIGHTERFLAG_HITH;
 		player2_fc = 2;
 	}
 	else if(keys[SDLK_y])
 	{
+		f2->flags = FIGHTERFLAG_HITL;
 		int has_hit2 = 0;
 		f2->sprite = LoadSprite("images/DoomMediumAttackReversed.png",219,145);
 		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
@@ -273,10 +281,12 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		{
 			f1->health -= 25;
 		}
+		//f2->flags &= ~FIGHTERFLAG_HITL;
 		player2_fc = 5;
 	}
 	else if(keys[SDLK_u])
 	{
+		f2->flags = FIGHTERFLAG_HITL;
 		int has_hit2 = 0;
 		f2->sprite = LoadSprite("images/DoomHeavyAttackReversed.png",270,173);
 		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
@@ -286,6 +296,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 			f1->health -= 50;
 		}
 		player2_fc = 8;
+		//f2->flags &= ~FIGHTERFLAG_HITL;
 	}
 	else if(keys[SDLK_i])
 	{
@@ -298,6 +309,19 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 			f1->health -= 150;
 		}
 		player2_fc = 8;
+	}
+	else if(keys[SDLK_f])
+	{
+		f2->flags = FIGHTERFLAG_BLOCK;
+		int has_hit = AABB(f2->hitbox,f1->hitbox,buffer);
+		if(has_hit == 1 && f1->flags == FIGHTERFLAG_HITH)
+		{
+			if(f2->health <= 250)
+				f2->health +=10;
+			else
+				f2->health = 250;
+		}
+		//f2->flags &= ~FIGHTERFLAG_BLOCK;
 	}
 	else if(keys[SDLK_w])
 	{
