@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
   Fighter* f2;
   int done;
   int keyn;
-  int i;
-  int mx,my;
+  //int i;
+  //int mx,my;
   Uint8 *keys;
   Init_All();
   temp = IMG_Load("images/bgtest.png");/*notice that the path is part of the filename*/
@@ -55,6 +55,9 @@ int main(int argc, char *argv[])
 	Parallax(tile,test,screen,32,32);
 	keys = SDL_GetKeyState(&keyn);
 	FighterController(f,f2,screen,keys);
+	//FighterPull(f,f2,keys);
+	//UpdateFighter(f,f2);
+	//DrawFighter(f,f2,screen);
 	DrawHealthBar(f,screen,0,0);
 	DrawHealthBar(f2,screen,310,0);
 	/*
@@ -95,4 +98,3 @@ void Init_All()
   //InitMouse();
   atexit(CleanUpAll);
 }
-
