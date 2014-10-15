@@ -5,18 +5,18 @@ LegionEnginePartDuex.  I appologize for any inconvience or performance issues th
 Controls:
 Dr. Doom
 WASD - Movement
-t - jab
-y - medium
-u - heavy
-i - launcher
+r - jab
+t - medium
+y - heavy
+g - launcher
 f - block
 
 Strider Hiryu
 Arrows - Movement
-x - light
-c - medium
-v - heavy
-b - launcher
+j - light
+k - medium
+l - heavy
+m - launcher
 n - block
 
 These controls are not final
