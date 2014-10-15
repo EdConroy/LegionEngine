@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
   //int mx,my;
   Uint8 *keys;
   Init_All();
-  temp = IMG_Load("images/bgtest.png");/*notice that the path is part of the filename*/
+  temp = IMG_Load("images/MvCStage.png");/*notice that the path is part of the filename*/
   if(temp != NULL)						/*ALWAYS check your pointers before you use them*/
     bg = SDL_DisplayFormat(temp);
   SDL_FreeSurface(temp);
@@ -52,14 +52,16 @@ int main(int argc, char *argv[])
   {
     ResetBuffer();
 	SDL_PumpEvents();
-	Parallax(tile,test,screen,32,32);
+	Parallax(test,test,buffer,32,32);
 	keys = SDL_GetKeyState(&keyn);
 	FighterController(f,f2,screen,keys);
-	//FighterPull(f,f2,keys);
-	//UpdateFighter(f,f2);
-	//DrawFighter(f,f2,screen);
+	/*
+	FighterPull(f,f2,keys);
+	UpdateFighter(f,f2);
+	DrawFighter(f,f2,screen);
+	*/
 	DrawHealthBar(f,screen,0,0);
-	DrawHealthBar(f2,screen,310,0);
+	DrawHealthBar(f2,screen,610,0);
 	/*
     if(SDL_GetMouseState(&mx,&my))
     {
@@ -70,7 +72,7 @@ int main(int argc, char *argv[])
 	{
 		done = 1;
 	}
-    //DrawMouse();
+    /* DrawMouse(); */
 	NextFrame();
 
     if(keys[SDLK_ESCAPE])done = 1;
