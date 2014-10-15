@@ -1,12 +1,14 @@
 #include "collision.h"
 
-int AABB(SDL_Rect attacker, SDL_Rect defender, SDL_Surface* screen)
+int AABB(SDL_Rect attacker, SDL_Rect defender)
 {
-	//Checks if the boxes intersect by comparing the boxes (x and widths) and (y and heights)
+	/*
+	Checks if the boxes intersect by comparing the boxes (x and widths) and (y and heights)
+	*/
 	if((attacker.x + attacker.w) > defender.x && (defender.x + defender.w) > attacker.x
 		&& (attacker.y + attacker.w) > defender.y && (defender.y + defender.h) > attacker.y)
 	{
-		ReturnBox(attacker,defender,1,screen);
+		//ReturnBox(attacker,defender,1,screen);
 		return 1;
 	}
 	return 0;
