@@ -68,8 +68,11 @@ Fighter * getFighter(int player);
 
 void FighterPull(Fighter* f1, Fighter* f2, Uint8* keys); /* Gets the inputs from the user and sets flags based on those
 														 inputs */
-void DrawFighter(Fighter* f1, Fighter* f2, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull */
-void UpdateFighter(Fighter* f1, Fighter* f2); /* Applies logic to to the action based on the fighter's current flag */
+//void FighterPull2(Fighter* f2, Uint8* keys);
+void DrawFighter1(Fighter* f1, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull */
+//void DrawFighter2(Fighter* f2, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull */
+//void UpdateFighter(Fighter* f1, Fighter* f2); /* Applies logic to to the action based on the fighter's current flag */
+void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer);
 void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* keys);/* Does all three of the aforementioned methods
 																				   really ineffiecent but functional */
 void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);/* Makes the health bar for both green and red health*/
