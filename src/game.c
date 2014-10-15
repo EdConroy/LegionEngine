@@ -54,9 +54,11 @@ int main(int argc, char *argv[])
 	SDL_PumpEvents();
 	Parallax(test,test,buffer,32,32);
 	keys = SDL_GetKeyState(&keyn);
+	FighterPull(f,f2,keys);
+	//FighterPull2(f2,keys);
+	FighterController1(f,f2,screen);
 	FighterController(f,f2,screen,keys);
 	/*
-	FighterPull(f,f2,keys);
 	UpdateFighter(f,f2);
 	DrawFighter(f,f2,screen);
 	*/
