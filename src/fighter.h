@@ -11,6 +11,7 @@
 #define FIGHTERFLAG_JUMP			6
 #define FIGHTERFLAG_IDLE			7
 #define FIGHTERFLAG_CROUCH			8
+#define FIGHTERFLAG_BLOCKL			9
 
 #define ANIMFLAG_BLOCK				0
 #define ANIMFLAG_NOBLOCK			1
@@ -58,21 +59,20 @@ typedef struct Fighter_T
 	long anim_flags;
 }Fighter;
 
-void InitFighterSprite();
-void InitCombatant(Fighter* f);
+void InitFighterSprite(); /* Sets the default animation state for fighters */
+void InitCombatant(Fighter* f); /* Initializes the spawns and values for the fighter */
 void InitCombatant2(Fighter* f);
-void InitFighterList();
+void InitFighterList(); /* Initializes the fighter list and populates it */
 
 Fighter * getFighter(int player);
 
-void Dash(Fighter* inflictor, SDL_Surface *buffer, Uint8* keys);
-//void FighterPull(Fighter* f1, Fighter* f2, Uint8* keys);
-//void DrawFighter(Fighter* f1, Fighter* f2, SDL_Surface* buffer);
-//void UpdateFighter(Fighter* f1, Fighter* f2);
-void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* keys);
-void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);
+void FighterPull(Fighter* f1, Fighter* f2, Uint8* keys); /* Gets the inputs from the user and sets flags based on those
+														 inputs */
+void DrawFighter(Fighter* f1, Fighter* f2, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull */
+void UpdateFighter(Fighter* f1, Fighter* f2); /* Applies logic to to the action based on the fighter's current flag */
+void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* keys);/* Does all three of the aforementioned methods
+																				   really ineffiecent but functional */
+void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);/* Makes the health bar for both green and red health*/
 
-
-void Print();
-void FreeFighter(Fighter* f);
-void CloseFighter();
+void FreeFighter(Fighter* f);/* Frees all of the current memory held by the fighter and sets it to null*/
+void CloseFighter();/* Frees all the fighters in the fighter list*/
