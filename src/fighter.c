@@ -61,8 +61,9 @@ void InitCombatant(Fighter* f)
 	f->hitbox.y = 410;
 	f->hitbox.w = 180;
 	f->hitbox.h = 150;
-	f->is_grounded = 1;
 	f->flags = 0;
+	f->anim_flags = 0;
+	f->f_jump = 0;
 }
 /*
 Sets the second player's data
@@ -80,13 +81,23 @@ void InitCombatant2(Fighter* f)
 	f->hitbox.y = 410;
 	f->hitbox.w = 180;
 	f->hitbox.h = 150;
-	f->is_grounded = 1;
+	f->flags = 0;
+	f->anim_flags = 0;
+	f->f_jump = 0;
 }
 /*
 Gets the key strokes from the user and applys the approriate flags to the player character
 */
-void FighterPull(Fighter* f1, Fighter* f2, Uint8* keys)
+void FighterPull(Fighter* f1, Uint8* keys)
 {
+	if(keys[SDLK_RIGHT] && f1->flags == FIGHTERFLAG_JUMP && f1->f_jump != JUMPFLAG_MOVEL)
+	{
+		f1->f_jump = JUMPFLAG_MOVER;
+	}
+	else if(keys[SDLK_LEFT] && f1->flags == FIGHTERFLAG_JUMP && f1->f_jump != JUMPFLAG_MOVER)
+	{
+		f1->f_jump = JUMPFLAG_MOVEL;
+	}
 	if(keys[SDLK_RIGHT] && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		f1->flags = FIGHTERFLAG_WALKR;
@@ -109,27 +120,27 @@ void FighterPull(Fighter* f1, Fighter* f2, Uint8* keys)
 		f1->flags = FIGHTERFLAG_JUMP;
 		f1->anim_flags = ANIMFLAG_JUMP;
 	}
-	else if(keys[SDLK_j])
+	else if(keys[SDLK_j] && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		f1->flags = FIGHTERFLAG_HITH;
 		f1->anim_flags = ANIMFLAG_LIGHT;
 	}
-	else if(keys[SDLK_k])
+	else if(keys[SDLK_k] && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		f1->flags = FIGHTERFLAG_HITL;
 		f1->anim_flags = ANIMFLAG_MED;
 	}
-	else if(keys[SDLK_l])
+	else if(keys[SDLK_l] && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		f1->flags = FIGHTERFLAG_HITH;
 		f1->anim_flags = ANIMFLAG_HEV;
 	}
-	else if(keys[SDLK_m])
+	else if(keys[SDLK_m] && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		f1->flags = FIGHTERFLAG_HITL;
 		f1->anim_flags = ANIMFLAG_LAUNCH;
 	}
-	else if(keys[SDLK_n])
+	else if(keys[SDLK_n] && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		f1->flags = FIGHTERFLAG_BLOCK;
 		f1->anim_flags = ANIMFLAG_BLOCK;
@@ -138,6 +149,7 @@ void FighterPull(Fighter* f1, Fighter* f2, Uint8* keys)
 	{
 		if(f1->y == 410 && f1->vy == 15)
 		{
+			/* If the fighter is at the floor and his velocity is at its max then he is idle*/
 			f1->flags = FIGHTERFLAG_IDLE;
 			f1->anim_flags = ANIMFLAG_IDLE;
 		}
@@ -145,50 +157,52 @@ void FighterPull(Fighter* f1, Fighter* f2, Uint8* keys)
 			f1->flags = FIGHTERFLAG_JUMP;
 	}
 }
-
+/* Same code used for fighter 1 but for fighter 2, not utilized in the demo because it produces some wierd bugs */
 void FighterPull2(Fighter* f2, Uint8* keys)
 {
-	if(keys[SDLK_d])
+	if(keys[SDLK_d] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_WALKL;
 		f2->flags = ANIMFLAG_WALKL;
 	}
-	else if(keys[SDLK_s])
+	else if(keys[SDLK_s] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_CROUCH;
 		f2->flags = ANIMFLAG_CROUCH;
+		if(keys[SDLK_f])
+			f2->flags = FIGHTERFLAG_BLOCKL;
 	}
-	else if(keys[SDLK_a])
+	else if(keys[SDLK_a] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_WALKR;
 		f2->flags = ANIMFLAG_WALKR;
 	}
-	else if(keys[SDLK_w])
+	else if(keys[SDLK_w] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_JUMP;
 		f2->flags = ANIMFLAG_JUMP;
 	}
-	else if(keys[SDLK_r])
+	else if(keys[SDLK_r] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_HITH;
 		f2->flags = ANIMFLAG_LIGHT;
 	}
-	else if(keys[SDLK_t])
+	else if(keys[SDLK_t] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_HITL;
 		f2->flags = ANIMFLAG_MED;
 	}
-	else if(keys[SDLK_y])
+	else if(keys[SDLK_y] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_HITL;
 		f2->flags = ANIMFLAG_HEV;
 	}
-	else if(keys[SDLK_g])
+	else if(keys[SDLK_g] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_HITL;
 		f2->flags = ANIMFLAG_LAUNCH;
 	}
-	else if(keys[SDLK_f])
+	else if(keys[SDLK_f] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_BLOCK;
 		f2->flags = ANIMFLAG_BLOCK;
@@ -205,7 +219,7 @@ void FighterPull2(Fighter* f2, Uint8* keys)
 	}
 }
 /*
-Draws the player character based on their current flag
+Draws the player character based on their current flag, FIXME
 */
 void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 {
@@ -278,7 +292,7 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 }
 /*
-Applys the logic of the moves based on the fighters' current flags
+Applys the logic of the moves based on the fighters' current flags, FIXME
 */
 void UpdateFighter(Fighter* f1, Fighter* f2)
 {
@@ -485,11 +499,12 @@ void UpdateFighter(Fighter* f1, Fighter* f2)
 	}
 }
 /*
-Performs all three tasks at the same time, very inefficent but functional
+Performs two of the three tasks at the same time, very inefficent but functional used for player one only
 */
 void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 {
-	int keyn, frame_count, i = 0;
+	int frame_count, i = 0;
+	f1->f_jump = NULL;
 	f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
 	if(f1->flags == FIGHTERFLAG_WALKR)
 	{
@@ -545,7 +560,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			frame_count = 3;
 		}
 	}
-	else if(f1->anim_flags == ANIMFLAG_LIGHT)
+	else if(f1->anim_flags == ANIMFLAG_LIGHT && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Light Attack: does the pulling, drawing, and logic for the attack */
 		int has_hit = 0;
@@ -558,7 +573,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		}
 		frame_count = 9;
 	}
-	else if(f1->anim_flags == ANIMFLAG_MED)
+	else if(f1->anim_flags == ANIMFLAG_MED && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Medium Attack: does the pulling, drawing, and logic for the attack */
 		int has_hit = 0;
@@ -571,7 +586,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		}
 		frame_count = 7;
 	}
-	else if(f1->anim_flags == ANIMFLAG_HEV)
+	else if(f1->anim_flags == ANIMFLAG_HEV && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Heavy Attack: does the pulling, drawing, and logic for the attack */
 		int has_hit = 0;
@@ -584,7 +599,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		}
 		frame_count = 13;
 	}
-	else if(f1->anim_flags == ANIMFLAG_LAUNCH)
+	else if(f1->anim_flags == ANIMFLAG_LAUNCH && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		/* 
 		 * Launcher Attack:  Used to knock the player high in the air for air combos
@@ -613,6 +628,19 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		/* Does the logic for jumping when the state is jumping */
 		f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
 		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
+		/* 
+		Begining to apply directional jumping, still under construction 
+		if(f1->f_jump == JUMPFLAG_MOVER && f1->x < 845 )
+		{
+			f1->x = f1->x + f1->walk_acc;
+			f1->hitbox.x = f1->x;
+		}
+		else if(f1->f_jump == JUMPFLAG_MOVEL && f1->x > 0)
+		{
+			f1->x = f1->x - f1->walk_acc;
+			f1->hitbox.x = f1->x;
+		}
+		*/
 		f1->y = f1->y - f1->vy;
 		f1->vy -= 1;
 		f1->hitbox.y = f1->y;
@@ -634,6 +662,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		f1->flags = FIGHTERFLAG_NOBLOCK;
 		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		frame_count = 3;
+		f1->f_jump = NULL;
 	}
 	F_Sprite.frame = (F_Sprite.frame + 1) % frame_count;
 	f1->sprite = NULL;
@@ -643,13 +672,13 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		/* f1->sprite = NULL; */
 	}
 }
+/* Player 2's fighter controller that does all three tasks at the same time */
 void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* keys)
 {
-	int keyn, player2_fc, i = 0;
-/* Fighter 2 code */
+	int player2_fc, i = 0;
 	f2->flags = FIGHTERFLAG_IDLE;
 	f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
-	if(keys[SDLK_d])
+	if(keys[SDLK_d] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Walk Left Code, prevents the player from walking off screen */
 		if(f2->x < 845)
@@ -671,7 +700,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 			player2_fc = 10;
 		}
 	}
-	else if(keys[SDLK_s])
+	else if(keys[SDLK_s] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->sprite = LoadSprite("images/DoomCrouch.png",129,88);
 		player2_fc = 1;
@@ -683,7 +712,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		}
 		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.frame);
 	}
-	else if(keys[SDLK_a])
+	else if(keys[SDLK_a] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Walk Right Code, prevents the player from walking off screen */
 		if(f2->x > 0)
@@ -704,7 +733,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 			player2_fc = 10;
 		}
 	}
-	else if(keys[SDLK_r])
+	else if(keys[SDLK_r] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Light Attack Code:  Pulls, draws, and does logic for Doom's light attack */
 		f2->flags = FIGHTERFLAG_HITH;
@@ -718,7 +747,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		}
 		player2_fc = 2;
 	}
-	else if(keys[SDLK_t])
+	else if(keys[SDLK_t] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Medium Attack Code:  Pulls, draws, and does logic for Doom's medium attack */
 		f2->flags = FIGHTERFLAG_HITL;
@@ -732,7 +761,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		}
 		player2_fc = 5;
 	}
-	else if(keys[SDLK_y])
+	else if(keys[SDLK_y] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Heavy Attack Code:  Pulls, draws, and does logic for Doom's heavy attack */
 		f2->flags = FIGHTERFLAG_HITL;
@@ -746,7 +775,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		}
 		player2_fc = 8;
 	}
-	else if(keys[SDLK_g])
+	else if(keys[SDLK_g] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		/* 
 		 * Launcher Attack:  Used to knock the player high in the air for air combos
@@ -764,7 +793,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		}
 		player2_fc = 16;
 	}
-	else if(keys[SDLK_f])
+	else if(keys[SDLK_f]&& f2->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Sets the fighter's flag to blocking */
 		f2->flags = FIGHTERFLAG_BLOCK;
@@ -830,8 +859,9 @@ void FreeFighter(Fighter* f)
 	f->hitbox.y = NULL;
 	f->hitbox.w = NULL;
 	f->hitbox.h = NULL;
-	f->is_grounded = NULL;
-	f->used--;
+	f->flags = NULL;
+	f->anim_flags = NULL;
+	f->f_jump = NULL;
 }
 /*
 Cleans up the fighter list if it hasn't already been cleaned
