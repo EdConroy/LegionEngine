@@ -17,26 +17,26 @@ void Init_All();
 /*notice the default arguments for main.  SDL expects main to look like that, so don't change it*/
 int main(int argc, char *argv[])
 {
-  SDL_Surface *temp;
+  SDL_Surface *temp, *temp2;
   SDL_Surface *bg;
   Sprite *tile;
   Sprite *test;
-  Fighter Fighters[MAX_FIGHTERS];
   Fighter* f;
   Fighter* f2;
   int done;
   int keyn;
+  int current_stage = 0;
   /*
   int i;
   int mx,my;
   */
   Uint8 *keys;
   Init_All();
-  /* temp = IMG_Load("images/bgtest.png"); second stage */
+  temp2 = IMG_Load("images/MvCStage2.png");/* second stage */
   temp = IMG_Load("images/MvCStage.png");/*notice that the path is part of the filename*/
   if(temp != NULL)						/*ALWAYS check your pointers before you use them*/
     bg = SDL_DisplayFormat(temp);
-  SDL_FreeSurface(temp);
+  /* SDL_FreeSurface(temp); */
   if(bg != NULL)
     SDL_BlitSurface(bg,NULL,buffer,NULL);
   tile = LoadSprite("images/32_32_16_2sprite.png",32,32);
@@ -50,8 +50,6 @@ int main(int argc, char *argv[])
   done = 0;
   f = getFighter(0);
   f2 = getFighter(1);
-  Fighters[0] = (*f);
-  Fighters[1] = (*f2);
   InitCombatant(f);
   InitCombatant2(f2);
   do
@@ -59,6 +57,25 @@ int main(int argc, char *argv[])
     ResetBuffer();
 	SDL_PumpEvents();
 	keys = SDL_GetKeyState(&keyn);
+	if(keys[SDLK_p])
+	{
+		if(current_stage == 0)
+		{
+			if(temp2 != NULL)						/*ALWAYS check your pointers before you use them*/
+				bg = SDL_DisplayFormat(temp2);
+			if(bg != NULL)
+				SDL_BlitSurface(bg,NULL,buffer,NULL);
+			current_stage = 1;
+		}
+		else
+		{
+			if(temp != NULL)						/*ALWAYS check your pointers before you use them*/
+				bg = SDL_DisplayFormat(temp);
+			if(bg != NULL)
+				SDL_BlitSurface(bg,NULL,buffer,NULL);
+			current_stage = 0;
+		}
+	}
 	Parallax(test,test,buffer,32,32);
 	FighterPull(f, keys);
 	FighterPull2(f2,keys);
@@ -85,6 +102,8 @@ int main(int argc, char *argv[])
 
     if(keys[SDLK_ESCAPE])done = 1;
   }while(!done);
+  SDL_FreeSurface(temp);
+  SDL_FreeSurface(temp2);
   exit(0); /*technically this will end the program, but the compiler likes all functions that can return a value TO return a value*/
   FreeFighter(f);
   FreeFighter(f2);
