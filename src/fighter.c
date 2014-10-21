@@ -52,13 +52,13 @@ void InitCombatant(Fighter* f)
 {
 	f->health = 300;
 	f->x = 110;
-	f->y = 410;
+	f->y = 610;
 	f->vy = 15;
 	f->walk_acc = 5;
 	f->walk_speed = 10;
 	f->jump_speed = 50;
 	f->hitbox.x = 110;
-	f->hitbox.y = 410;
+	f->hitbox.y = 610;
 	f->hitbox.w = 180;
 	f->hitbox.h = 150;
 	f->flags = 0;
@@ -72,13 +72,13 @@ void InitCombatant2(Fighter* f)
 {
 	f->health = 300;
 	f->x = 610;
-	f->y = 410;
+	f->y = 610;
 	f->vy = 15;
 	f->walk_speed = 10;
 	f->walk_acc = 5;
 	f->jump_speed = 50;
 	f->hitbox.x = 610;
-	f->hitbox.y = 410;
+	f->hitbox.y = 610;
 	f->hitbox.w = 180;
 	f->hitbox.h = 150;
 	f->flags = 0;
@@ -147,7 +147,7 @@ void FighterPull(Fighter* f1, Uint8* keys)
 	}	
 	else
 	{
-		if(f1->y == 410 && f1->vy == 15)
+		if(f1->y == 610 && f1->vy == 15)
 		{
 			/* If the fighter is at the floor and his velocity is at its max then he is idle*/
 			f1->flags = FIGHTERFLAG_IDLE;
@@ -645,12 +645,12 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		f1->vy -= 1;
 		f1->hitbox.y = f1->y;
 		frame_count = 3;
-		if(f1->y >= 410 && f1->vy != 15)
+		if(f1->y >= 610 && f1->vy != 15)
 		{
 			/* When the player touches the ground the state is set to idle */
 			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
 			DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
-			f1->y = 410;
+			f1->y = 610;
 			f1->vy = 15;
 			f1->hitbox.y = f1->y;
 			frame_count = 3;
@@ -814,12 +814,12 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		f2->vy -= 1;
 		f2->hitbox.y = f2->y;
 		player2_fc = 10;
-		if(f2->y >= 410 && f2->vy != 15)
+		if(f2->y >= 610 && f2->vy != 15)
 		{
 			/* When the player touches the ground the state is set to idle */
 			f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
 			DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
-			f2->y = 410;
+			f2->y = 610;
 			f2->vy = 15;
 			f2->hitbox.y = f2->y;
 			player2_fc = 10;
