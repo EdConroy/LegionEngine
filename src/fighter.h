@@ -1,3 +1,6 @@
+#ifndef _FIGHTER_
+#define _FIGHTER_
+
 #include "graphics.h"
 
 #define IS_SET(a,b)				(a & b)
@@ -92,3 +95,5 @@ void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);/* Makes the h
 
 void FreeFighter(Fighter* f);/* Frees all of the current memory held by the fighter and sets it to null*/
 void CloseFighter();/* Frees all the fighters in the fighter list*/
+
+#endif
