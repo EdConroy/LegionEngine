@@ -22,3 +22,7 @@ n - block
 These controls are not final
 
 Launching will unleash a one hit kill move as aerial combos have not yet been implemented
+
+Update 10/21: The game's floor has shifted down to make the players look more like they are walking on the ground.
+The game does not currently run on an entity system as that is currently in the works, but for now the game functions
+just fine.
