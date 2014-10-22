@@ -488,8 +488,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 			f2->flags = FIGHTERFLAG_WALKL;
 			if(f2->sprite != NULL) FreeSprite(f2->sprite);
 			f2->sprite = LoadSprite("images/DoomWalkBckReversed.png",153,140);
-			f2->last_x = f2->x;
-			f2->x = f2->last_x + f2->walk_acc;
+			f2->x = f2->x + f2->walk_acc;
 			f2->hitbox.x = f2->x;
 			player2_fc = 8;
 		}
@@ -523,8 +522,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 			f2->flags = FIGHTERFLAG_WALKR;
 			if(f2->sprite != NULL) FreeSprite(f2->sprite);
 			f2->sprite = LoadSprite("images/DoomWalkFwdReversed.png",154,144);
-			f2->last_x = f2->x;
-			f2->x = f2->last_x - f2->walk_acc;
+			f2->x = f2->x - f2->walk_acc;
 			f2->hitbox.x = f2->x;
 			player2_fc = 8;
 		}
