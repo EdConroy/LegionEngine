@@ -67,7 +67,10 @@ int main(int argc, char *argv[])
 				SDL_BlitSurface(bg,NULL,buffer,NULL);
 			current_stage = 1;
 		}
-		else
+	}
+	if(keys[SDLK_o])
+	{
+		if(current_stage == 1)
 		{
 			if(temp != NULL)						/*ALWAYS check your pointers before you use them*/
 				bg = SDL_DisplayFormat(temp);
@@ -83,7 +86,7 @@ int main(int argc, char *argv[])
 	FighterController(f,f2,screen,keys);
 	/*
 	UpdateFighter(f,f2);
-	DrawFighter(f,f2,screen);
+	DrawFighter1(f,screen);
 	*/
 	DrawHealthBar(f,screen,0,0);
 	DrawHealthBar(f2,screen,610,0);
