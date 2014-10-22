@@ -9,8 +9,12 @@
 
 #define MAX_FIGHTERS				2
 
-/* I should enumerate these but I got caught up in a Vin Diesel
-brutally murders a bunch of people in space movie to change it*/
+/* 
+I should enumerate these but I got caught up in a Vin Diesel
+brutally murders a bunch of people in space movie to change it
+then Keanu Reeves and Satan troll Gabriel really hard until God
+starts trolling Satan then Satan rage quits
+*/
 #define FIGHTERFLAG_BLOCK			0
 #define FIGHTERFLAG_NOBLOCK			1
 #define FIGHTERFLAG_HITH			2
@@ -21,14 +25,18 @@ brutally murders a bunch of people in space movie to change it*/
 #define FIGHTERFLAG_IDLE			7
 #define FIGHTERFLAG_CROUCH			8
 #define FIGHTERFLAG_BLOCKL			9
-
+/*
+This would be a lot funnier if you read these in Charles Barkley's voice
+*/
 #define JUMPFLAG_MOVEL				0
 #define JUMPFLAG_MOVER				1
 #define JUMPFLAG_LIGHT				2
 #define JUMPFLAG_MED				3
 #define JUMPFLAG_HEV				4
 #define JUMPFLAG_LAUNCH				5
-
+/*
+Shoutouts to the AniManiacs for the idea for the naming convention here
+*/
 #define ANIMFLAG_BLOCK				0
 #define ANIMFLAG_NOBLOCK			1
 #define ANIMFLAG_LIGHT				2
@@ -44,36 +52,37 @@ brutally murders a bunch of people in space movie to change it*/
 
 typedef struct Fighter_T
 {
-	Sprite* sprite;
-	SDL_Rect hitbox;
-	float walk_speed; 
-	float walk_acc; 
-	float run_speed; 
+	Sprite* sprite; /* Disclaimer: Not an actual Coke product*/
+	SDL_Rect hitbox; /* Disclaimer: Not an actual Twitch rip off*/
+	float walk_speed; /* Disclaimer: Doom has no need for walk speed*/
+	float walk_acc; /* Doesn't matter, everyone is the Roadrunner 
+					in this game currently where they walk at max acceleration*/
+	float run_speed; /* Running is for squares, like pants*/
 	float run_acc; 
 	float fall_acc;
-	float jump_speed; 
-	float jump_height; 
-	float air_drift;
-	float meter_level; 
-	float stun_timer;
-	float shield_stun; 
-	float hitstop; 
-	float current_speed; 
-	float current_acc;
-	int x;
-	int y; 
-	int last_x;
-	int last_y; 
-	int health; 
-	int weight; 
-	int combo_count;
-	int facing; 
-	int jump_count;
-	int used;  
-	int vy;
-	long flags;
-	long anim_flags;
-	long f_jump;
+	float jump_speed; /* Inspired by Charles Barkley's Shut Up and Jam Gaiden*/ 
+	float jump_height; /* Inspired by the inspiration dervived from Chalres Barkley's Shut Up and Jam Gaiden*/
+	float air_drift; /* Inspired by On Fire mode in NBA Jam, because everyone needs to be able to dunk from half court*/
+	float meter_level; /* I could make a DBZ reference here, but I choose not to for your benefit*/
+	float stun_timer; /* Approximately about as long as it takes for Comets in the Kiper Belt to get here*/
+	float shield_stun; /* You know that real life thing where after you block a punch you just stand there to get punched
+					   again?  Yeah, me niether*/
+	float hitstop; /* Irrelevent because the hits never stop :D*/
+	float current_speed; /* Mach 5*/
+	float current_acc; /* Mach 5^n */
+	int x; /* Goin' give it to ya */
+	int y; /* Don't you keep on reading the comments for this struct*/
+	int health; /* What I constantly loose everytime I pick up a fight stick*/
+	int weight; /* So they characters you like get comboed */
+	int combo_count; /* So the game keeps track of how badly you are getting beat*/
+	int facing; /* So the fighter knows which direction he is facing*/
+	int jump_count; /* So the fighter knows if he wore his Jordans to the fight or not*/
+	int used; /* Used for memory management, except for the fact that it isn't at all*/ 
+	int vy; /* Vertical velocity: somewhere between a fish at the bottom 
+			of the Marianas Trench to an Arwing in Starfox 64*/
+	long flags; /* This is your brain*/
+	long anim_flags; /* This is your brain on drugs*/
+	long f_jump; /* flag to determine the state in the air of the fighter */
 }Fighter;
 
 void InitFighterSprite(); /* Sets the default animation state for fighters */
