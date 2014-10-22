@@ -57,11 +57,11 @@ int main(int argc, char *argv[])
     ResetBuffer();
 	SDL_PumpEvents();
 	keys = SDL_GetKeyState(&keyn);
-	if(keys[SDLK_p])
+	if(keys[SDLK_p]) /* Changes the stages */
 	{
 		if(current_stage == 0)
 		{
-			if(temp2 != NULL)						/*ALWAYS check your pointers before you use them*/
+			if(temp2 != NULL)						
 				bg = SDL_DisplayFormat(temp2);
 			if(bg != NULL)
 				SDL_BlitSurface(bg,NULL,buffer,NULL);
@@ -79,10 +79,11 @@ int main(int argc, char *argv[])
 			current_stage = 0;
 		}
 	}
-	Parallax(test,test,buffer,32,32);
-	FighterPull(f, keys);
+	Parallax(test,test,buffer,32,32); /* Causes two bars to move across the background at different paces causing
+									  a Parallax effect*/
+	FighterPull(f, keys); /* Gets the key input from the user */
 	FighterPull2(f2,keys);
-	FighterController1(f,f2,screen);
+	FighterController1(f,f2,screen); /* Translates the key input into actions*/
 	FighterController(f,f2,screen,keys);
 	/*
 	UpdateFighter(f,f2);
@@ -98,19 +99,19 @@ int main(int argc, char *argv[])
 	*/
 	if(f->health <= 0 || f2->health <= 0)
 	{
-		done = 1;
+		done = 1; /* Upon defeat the game exits */
 	}
     /* DrawMouse(); */
 	NextFrame();
 
     if(keys[SDLK_ESCAPE])done = 1;
   }while(!done);
-  SDL_FreeSurface(temp);
+  SDL_FreeSurface(temp); /* Frees the two background images from memory*/
   SDL_FreeSurface(temp2);
   exit(0); /*technically this will end the program, but the compiler likes all functions that can return a value TO return a value*/
-  FreeFighter(f);
+  FreeFighter(f); /* Clean up any used data by the fighters*/
   FreeFighter(f2);
-  FreeBck(tile,tile);
+  FreeBck(tile,tile); /* Frees the two images used for the Parallax scrolling*/
   return 0;
 }
 
