@@ -224,66 +224,76 @@ Draws the player character based on their current flag, FIXME
 void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 {
 	int frame_count;
-	f1->sprite = LoadSprite("images/StriderIdle.png", 114, 101);
 	if(f1->anim_flags == ANIMFLAG_WALKL)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
-		DrawSprite(f1->sprite,buffer,f1->x + f1->walk_acc, f1->y,F_Sprite.frame);
 		frame_count = 10;
 	}
 	else if(f1->anim_flags == ANIMFLAG_WALKR)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
-		DrawSprite(f1->sprite,buffer,f1->x - f1->walk_acc,f1->y,F_Sprite.frame);
 		frame_count = 10;
 	}
 	else if(f1->anim_flags == ANIMFLAG_CROUCH)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderCrouch.png",108,68);
-		DrawSprite(f1->sprite,buffer,f1->x,f1->y, F_Sprite.frame);
 		frame_count = 6;
 	}
 	else if(f1->anim_flags == ANIMFLAG_JUMP)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderJump.png",183,138);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y - f1->jump_speed,F_Sprite.frame);
 	}
 	else if(f1->anim_flags == ANIMFLAG_LIGHT)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderLightAttack.png",179,138);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		frame_count = 9;
 	}
 	else if(f1->anim_flags == ANIMFLAG_MED)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderMediumAttack.png",198,140);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		frame_count = 7;
 	}
 	else if(f1->anim_flags == ANIMFLAG_HEV)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderHeavyAttack.png",206,140);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		frame_count = 13;
 	}
 	else if(f1->anim_flags == ANIMFLAG_LAUNCH)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderLauncherAttack.png",198,162);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		frame_count = 8;
 	}
 	else if(f1->anim_flags == ANIMFLAG_BLOCK)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderBlock.png",103,110);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		frame_count = 4;
 	}
 	else
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = NULL;
 		f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		frame_count = 3;
 	}
+	DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 	F_Sprite.frame = (F_Sprite.frame + 1) % frame_count;
 	if(f1->sprite != NULL)
 	{
@@ -291,213 +301,7 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 		f1->sprite = NULL;
 	}
 }
-/*
-Applys the logic of the moves based on the fighters' current flags, FIXME
-*/
-void UpdateFighter(Fighter* f1, Fighter* f2)
-{
-	if(f1->flags == FIGHTERFLAG_WALKR)
-	{
-		if(f1->x < 845)
-		{
-			f1->x = f1->x + f1->walk_acc;
-			f1->hitbox.x = f1->x;
-		}
-		else
-		{
-			f1->flags = FIGHTERFLAG_IDLE;
-			f1->anim_flags = ANIMFLAG_IDLE;
-		}
-	}
-	else if(f1->flags == FIGHTERFLAG_CROUCH)
-	{
-	}
-	else if(f1->flags == FIGHTERFLAG_WALKL)
-	{
-		if(f1->x > 0)
-		{
-			f1->x = f1->x - f1->walk_acc;
-			f1->hitbox.x = f1->x;
-		}
-		else
-		{
-			f1->flags = FIGHTERFLAG_IDLE;
-			f1->anim_flags = ANIMFLAG_IDLE;
-		}
-	}
-	else if(f1->anim_flags == ANIMFLAG_LIGHT)
-	{
-		f1->flags = FIGHTERFLAG_HITH;
-		int has_hit = 0;
-		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
-		{
-			f2->health -= 15;
-		}
-		f1->flags = FIGHTERFLAG_IDLE;
-	}
-	else if(f1->anim_flags == ANIMFLAG_MED)
-	{
-		f1->flags = FIGHTERFLAG_HITL;
-		int has_hit = 0;
-		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1)
-		{
-			f2->health -= 25;
-		}
-		f1->flags = FIGHTERFLAG_IDLE;
-	}
-	else if(f1->anim_flags == ANIMFLAG_HEV)
-	{
-		f1->flags = FIGHTERFLAG_HITH;
-		int has_hit = 0;
-		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
-		{
-			f2->health -= 50;
-		}
-		f1->flags = FIGHTERFLAG_IDLE;
-	}
-	else if(f1->anim_flags == ANIMFLAG_LAUNCH)
-	{
-		f1->flags = FIGHTERFLAG_HITL;
-		int has_hit = 0;
-		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1)
-		{
-			f2->health -= 150;
-		}
-		f1->flags = FIGHTERFLAG_IDLE;
-	}
-	else if(f1->flags == FIGHTERFLAG_BLOCK)
-	{
-		int has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags == FIGHTERFLAG_HITH)
-		{
-			if(f1->health <= 250)
-				f1->health +=10;
-			else
-				f1->health = 250;
-		}
-	}	
-	else if(f1->flags == FIGHTERFLAG_JUMP)
-	{
-		f1->y = f2->y - f2->vy;
-		f1->vy -= 1;
-		f1->hitbox.y = f2->y;
-		if(f1->y >= 410 && f1->vy != 15)
-		{
-			/* When the player touches the ground the state is set to idle */
-			f1->y = 410;
-			f1->vy = 15;
-			f1->hitbox.y = f2->y;
-			f1->flags = FIGHTERFLAG_IDLE;
-		}
-	}
-	else
-	{
-		f1->flags = FIGHTERFLAG_IDLE;
-		f1->anim_flags = ANIMFLAG_IDLE;
-	}
-//Fighter 2 code
-	if(f2->flags == FIGHTERFLAG_WALKR)
-	{
-		if(f2->x < 845)
-		{
-			f2->x = f2->x + f2->walk_acc;
-			f2->hitbox.x = f2->x;
-		}
-		else
-		{
-			f2->flags = FIGHTERFLAG_IDLE;
-			f2->anim_flags = ANIMFLAG_IDLE;
-		}
-	}
-	else if(f2->flags == FIGHTERFLAG_CROUCH)
-	{
-	}
-	else if(f2->flags == FIGHTERFLAG_WALKL)
-	{
-		if(f2->x > 0)
-		{
-			f2->x = f2->x - f2->walk_acc;
-			f2->hitbox.x = f2->x;
-		}
-		else
-		{
-			f2->flags = FIGHTERFLAG_IDLE;
-			f2->anim_flags = ANIMFLAG_IDLE;
-		}
-	}
-	else if(f2->anim_flags == ANIMFLAG_LIGHT)
-	{
-		f2->flags = FIGHTERFLAG_HITH;
-		int has_hit2 = 0;
-		has_hit2 = AABB(f2->hitbox,f1->hitbox);
-		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCK)
-		{
-			f1->health -= 15;
-		}
-		f2->flags = FIGHTERFLAG_IDLE;
-	}
-	else if(f2->anim_flags == ANIMFLAG_MED)
-	{
-		f2->flags = FIGHTERFLAG_HITL;
-		int has_hit2 = 0;
-		has_hit2 = AABB(f2->hitbox,f1->hitbox);
-		if(has_hit2 == 1)
-		{
-			f1->health -= 25;
-		}
-		f2->flags = FIGHTERFLAG_IDLE;
-	}
-	else if(f2->anim_flags == ANIMFLAG_HEV)
-	{
-		f2->flags = FIGHTERFLAG_HITL;
-		int has_hit2 = 0;
-		has_hit2 = AABB(f2->hitbox,f1->hitbox);
-		if(has_hit2 == 1)
-		{
-			f1->health -= 50;
-		}
-		f2->flags = FIGHTERFLAG_IDLE;
-	}
-	else if(f2->anim_flags == ANIMFLAG_LAUNCH)
-	{
-		int has_hit2 = 0;
-		has_hit2 = AABB(f2->hitbox,f1->hitbox);
-		if(has_hit2 == 1)
-		{
-			f1->health -= 150;
-		}
-		f2->flags = FIGHTERFLAG_IDLE;
-	}
-	else if(f2->flags == FIGHTERFLAG_BLOCK)
-	{
-		int has_hit = AABB(f2->hitbox,f1->hitbox);
-		if(has_hit == 1 && f1->flags == FIGHTERFLAG_HITH)
-		{
-			if(f2->health <= 250)
-				f2->health +=10;
-			else
-				f2->health = 250;
-		}
-	}
-	else if(f2->flags == FIGHTERFLAG_JUMP)
-	{
-		f2->y = f2->y - f2->vy;
-		f2->vy -= 1;
-		f2->hitbox.y = f2->y;
-		if(f2->y >= 410 && f2->vy != 15)
-		{
-			/* When the player touches the ground the state is set to idle */
-			f2->y = 410;
-			f2->vy = 15;
-			f2->hitbox.y = f2->y;
-			f2->flags = FIGHTERFLAG_IDLE;
-		}
-	}
-}
+
 /*
 Performs two of the three tasks at the same time, very inefficent but functional used for player one only
 */
@@ -505,16 +309,14 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 {
 	int frame_count, i = 0;
 	f1->f_jump = NULL;
-	f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
 	if(f1->flags == FIGHTERFLAG_WALKR)
 	{
 		/* Walk Right code, prevents the player from walking off of the stage*/
 		if(f1->x < 845)
 		{
+			if(f1->sprite != NULL) FreeSprite(f1->sprite);
 			f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
-			DrawSprite(f1->sprite,buffer,f1->x + f1->walk_acc, f1->y,F_Sprite.frame);
-			f1->last_x = f1->x;
-			f1->x = f1->last_x + f1->walk_acc;
+			f1->x = f1->x + f1->walk_acc;
 			f1->hitbox.x = f1->x;
 			frame_count = 10;
 		}
@@ -522,21 +324,21 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		{
 			/* If the player attempts to walk off of the stage set his state to idle*/
 			f1->flags = FIGHTERFLAG_IDLE;
+			if(f1->sprite != NULL) FreeSprite(f1->sprite);
 			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
-			DrawSprite(f1->sprite,buffer,f1->x,f1->y, F_Sprite.frame);
 			frame_count = 3;
 		}
 	}
 	else if(f1->flags == FIGHTERFLAG_CROUCH)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		f1->sprite = LoadSprite("images/StriderCrouch.png",108,68);
-		DrawSprite(f1->sprite,buffer,f1->x,f1->y, F_Sprite.frame);
 		frame_count = 6;
 	}
 	else if(f1->flags == FIGHTERFLAG_BLOCKL)
 	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		f1->sprite = LoadSprite("images/StriderCrouchBlock.png",98,91);
-		DrawSprite(f1->sprite,buffer,f1->x,f1->y, F_Sprite.frame);
 		frame_count = 4;
 	}
 	else if(f1->flags == FIGHTERFLAG_WALKL)
@@ -544,10 +346,9 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		/* Walk left code, prevents the player from walking off of the stage*/
 		if(f1->x > 0)
 		{
+			if(f1->sprite != NULL) FreeSprite(f1->sprite);
 			f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
-			DrawSprite(f1->sprite,buffer,f1->x - f1->walk_acc,f1->y,F_Sprite.frame);
-			f1->last_x = f1->x;
-			f1->x = f1->last_x - f1->walk_acc;
+			f1->x = f1->x - f1->walk_acc;
 			f1->hitbox.x = f1->x;
 			frame_count = 10;
 		}
@@ -555,8 +356,8 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		{
 			/* If the player attempts to walk off of the stage he is set to idle*/
 			f1->flags = FIGHTERFLAG_IDLE;
+			if(f1->sprite != NULL) FreeSprite(f1->sprite);
 			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
-			DrawSprite(f1->sprite,buffer,f1->x,f1->y,F_Sprite.frame);
 			frame_count = 3;
 		}
 	}
@@ -564,8 +365,8 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 	{
 		/* Light Attack: does the pulling, drawing, and logic for the attack */
 		int has_hit = 0;
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		f1->sprite = LoadSprite("images/StriderLightAttack.png",179,138);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		has_hit = AABB(f1->hitbox,f2->hitbox);
 		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
 		{
@@ -577,8 +378,8 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 	{
 		/* Medium Attack: does the pulling, drawing, and logic for the attack */
 		int has_hit = 0;
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		f1->sprite = LoadSprite("images/StriderMediumAttack.png",198,140);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		has_hit = AABB(f1->hitbox,f2->hitbox);
 		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL)
 		{
@@ -590,8 +391,8 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 	{
 		/* Heavy Attack: does the pulling, drawing, and logic for the attack */
 		int has_hit = 0;
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		f1->sprite = LoadSprite("images/StriderHeavyAttack.png",206,140);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		has_hit = AABB(f1->hitbox,f2->hitbox);
 		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
 		{
@@ -607,8 +408,8 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		 * been programmed in yet
 		*/
 		int has_hit = 0;
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		f1->sprite = LoadSprite("images/StriderLauncherAttack.png",198,162);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		has_hit = AABB(f1->hitbox,f2->hitbox);
 		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL)
 		{
@@ -619,15 +420,15 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 	else if(f1->flags == FIGHTERFLAG_BLOCK)
 	{
 		/* Sets the player's state to block */
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		f1->sprite = LoadSprite("images/StriderBlock.png",103,110);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		frame_count = 4;
 	}	
 	if(f1->flags == FIGHTERFLAG_JUMP)
 	{
 		/* Does the logic for jumping when the state is jumping */
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 		/* 
 		Begining to apply directional jumping, still under construction 
 		if(f1->f_jump == JUMPFLAG_MOVER && f1->x < 845 )
@@ -648,8 +449,8 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		if(f1->y >= 610 && f1->vy != 15)
 		{
 			/* When the player touches the ground the state is set to idle */
+			if(f1->sprite != NULL) FreeSprite(f1->sprite);
 			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
-			DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
 			f1->y = 610;
 			f1->vy = 15;
 			f1->hitbox.y = f1->y;
@@ -660,10 +461,12 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 	else if(f1->flags == FIGHTERFLAG_IDLE)
 	{
 		f1->flags = FIGHTERFLAG_NOBLOCK;
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
 		frame_count = 3;
 		f1->f_jump = NULL;
 	}
+	DrawSprite(f1->sprite,buffer,f1->x,f1->y, F_Sprite.frame);
 	F_Sprite.frame = (F_Sprite.frame + 1) % frame_count;
 	f1->sprite = NULL;
 	if(f1->sprite != NULL)
@@ -677,15 +480,14 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 {
 	int player2_fc, i = 0;
 	f2->flags = FIGHTERFLAG_IDLE;
-	f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
 	if(keys[SDLK_d] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		/* Walk Left Code, prevents the player from walking off screen */
 		if(f2->x < 845)
 		{
 			f2->flags = FIGHTERFLAG_WALKL;
+			if(f2->sprite != NULL) FreeSprite(f2->sprite);
 			f2->sprite = LoadSprite("images/DoomWalkBckReversed.png",153,140);
-			DrawSprite(f2->sprite,buffer,f2->x + f2->walk_acc, f2->y,F_Sprite.player2_frame);
 			f2->last_x = f2->x;
 			f2->x = f2->last_x + f2->walk_acc;
 			f2->hitbox.x = f2->x;
@@ -695,13 +497,15 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		{
 			/* If the player tries to walk off screen display him as idle */
 			f2->flags = FIGHTERFLAG_IDLE;
+			if(f2->sprite != NULL) FreeSprite(f2->sprite);
 			f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
-			DrawSprite(f2->sprite,buffer,f2->x,f2->y,F_Sprite.frame);
 			player2_fc = 10;
 		}
 	}
 	else if(keys[SDLK_s] && f2->flags != FIGHTERFLAG_JUMP)
 	{
+		f2->flags = FIGHTERFLAG_CROUCH;
+		if(f2->sprite != NULL) FreeSprite(f2->sprite);
 		f2->sprite = LoadSprite("images/DoomCrouch.png",129,88);
 		player2_fc = 1;
 		if(keys[SDLK_f])
@@ -710,7 +514,6 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 			f2->sprite = LoadSprite("images/DoomCrouchBlock.png",131,98);
 			player2_fc = 3;
 		}
-		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.frame);
 	}
 	else if(keys[SDLK_a] && f2->flags != FIGHTERFLAG_JUMP)
 	{
@@ -718,8 +521,8 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		if(f2->x > 0)
 		{
 			f2->flags = FIGHTERFLAG_WALKR;
+			if(f2->sprite != NULL) FreeSprite(f2->sprite);
 			f2->sprite = LoadSprite("images/DoomWalkFwdReversed.png",154,144);
-			DrawSprite(f2->sprite,buffer,f2->x - f2->walk_acc,f2->y,F_Sprite.player2_frame);
 			f2->last_x = f2->x;
 			f2->x = f2->last_x - f2->walk_acc;
 			f2->hitbox.x = f2->x;
@@ -728,8 +531,8 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		else
 		{
 			f2->flags = FIGHTERFLAG_IDLE;
+			if(f2->sprite != NULL) FreeSprite(f2->sprite);
 			f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
-			DrawSprite(f2->sprite,buffer,f2->x,f2->y,F_Sprite.player2_frame);
 			player2_fc = 10;
 		}
 	}
@@ -737,9 +540,9 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	{
 		/* Light Attack Code:  Pulls, draws, and does logic for Doom's light attack */
 		f2->flags = FIGHTERFLAG_HITH;
+		if(f2->sprite != NULL) FreeSprite(f2->sprite);
 		int has_hit2 = 0;
 		f2->sprite = LoadSprite("images/DoomLightAttackReversed.png",215,134);
-		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
 		has_hit2 = AABB(f2->hitbox,f1->hitbox);
 		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCK)
 		{
@@ -752,8 +555,8 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		/* Medium Attack Code:  Pulls, draws, and does logic for Doom's medium attack */
 		f2->flags = FIGHTERFLAG_HITL;
 		int has_hit2 = 0;
+		if(f2->sprite != NULL) FreeSprite(f2->sprite);
 		f2->sprite = LoadSprite("images/DoomMediumAttackReversed.png",219,145);
-		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
 		has_hit2 = AABB(f2->hitbox,f1->hitbox);
 		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
 		{
@@ -766,8 +569,8 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		/* Heavy Attack Code:  Pulls, draws, and does logic for Doom's heavy attack */
 		f2->flags = FIGHTERFLAG_HITL;
 		int has_hit2 = 0;
+		if(f2->sprite != NULL) FreeSprite(f2->sprite);
 		f2->sprite = LoadSprite("images/DoomHeavyAttackReversed.png",270,173);
-		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
 		has_hit2 = AABB(f2->hitbox,f1->hitbox);
 		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
 		{
@@ -784,8 +587,8 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		*/
 		int has_hit2 = 0;
 		f2->flags = FIGHTERFLAG_HITL;
+		if(f2->sprite != NULL) FreeSprite(f2->sprite);
 		f2->sprite = LoadSprite("images/DoomLauncherAttack.png",286,151);
-		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
 		has_hit2 = AABB(f2->hitbox,f1->hitbox);
 		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
 		{
@@ -797,8 +600,8 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	{
 		/* Sets the fighter's flag to blocking */
 		f2->flags = FIGHTERFLAG_BLOCK;
+		if(f2->sprite != NULL) FreeSprite(f2->sprite);
 		f2->sprite = LoadSprite("images/DoomBlock.png",144,139);
-		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
 		player2_fc = 4;
 	}
 	else if(keys[SDLK_w] && f2->flags != FIGHTERFLAG_JUMP)
@@ -808,8 +611,8 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	if(f2->flags == FIGHTERFLAG_JUMP)
 	{
 		/* Does the logic for jumping when the state is jumping */
+		if(f2->sprite != NULL) FreeSprite(f2->sprite);
 		f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
-		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
 		f2->y = f2->y - f2->vy;
 		f2->vy -= 1;
 		f2->hitbox.y = f2->y;
@@ -817,8 +620,8 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 		if(f2->y >= 610 && f2->vy != 15)
 		{
 			/* When the player touches the ground the state is set to idle */
+			if(f2->sprite != NULL) FreeSprite(f2->sprite);
 			f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
-			DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
 			f2->y = 610;
 			f2->vy = 15;
 			f2->hitbox.y = f2->y;
@@ -830,9 +633,11 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* key
 	{
 		/* Defaults to idle if nothing else */
 		f2->flags = FIGHTERFLAG_NOBLOCK;
-		DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
+		if(f2->sprite != NULL) FreeSprite(f2->sprite);
+		f2->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
 		player2_fc = 10;
 	}
+	DrawSprite(f2->sprite,buffer,f2->x, f2->y,F_Sprite.player2_frame);
 	F_Sprite.player2_frame = (F_Sprite.player2_frame + 1) % player2_fc;
 	/* Frees up the sprite for the next render */
 	f2->sprite = NULL;
