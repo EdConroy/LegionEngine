@@ -27,3 +27,5 @@ The game does not currently run on an entity system as that is currently in the 
 just fine.
 
 Update 10/25: Press O and P to change stages
+
+Update 10/26: Added background music, audio.c, and audio.h. 
