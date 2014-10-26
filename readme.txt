@@ -1,5 +1,7 @@
 This engine is the version that provides the functionality of the fighting game Mahvel Baybe!, it is not the final version, nor
 the most optimized version of the engine.  I appologize for any inconvience or performance issues this version may cause in advance.
+The Characters, Stages, and Music are all owned by Capcom and Marvel respectively, the assets are not included due to copyright
+issues so the only thing that is made available is the source code.
 
 Controls:
 Dr. Doom
