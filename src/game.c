@@ -5,6 +5,7 @@
 #include "graphics.h"
 #include "fighter.h"
 #include "background.h"
+#include "audio.h"
 
 extern SDL_Surface *screen;
 extern SDL_Surface *buffer; /*pointer to the draw buffer*/
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
   SDL_Surface *bg;
   Sprite *tile;
   Sprite *test;
+  Mix_Music* music;
   Fighter* f;
   Fighter* f2;
   int done;
@@ -41,6 +43,7 @@ int main(int argc, char *argv[])
     SDL_BlitSurface(bg,NULL,buffer,NULL);
   tile = LoadSprite("images/32_32_16_2sprite.png",32,32);
   test = LoadSprite("images/testbck.png",32,32);
+music = Mix_LoadMUS("sounds/Clocktower.wav");
   /*
   if(tile != NULL)for(i = 0;i < 12;i++)
   {
@@ -52,6 +55,7 @@ int main(int argc, char *argv[])
   f2 = getFighter(1);
   InitCombatant(f);
   InitCombatant2(f2);
+  PlayMusic(music);
   do
   {
     ResetBuffer();
@@ -104,6 +108,7 @@ int main(int argc, char *argv[])
 			fprintf(stdout,"Game Over: Strider Hiryu Wins\n");
 		else
 			fprintf(stdout,"Game Over: Dr. Doom Wins\n");
+		Mix_HaltMusic();
 	}
 	/*
 	if(f->health <= 0)
@@ -134,6 +139,7 @@ int main(int argc, char *argv[])
   }while(!done);
   SDL_FreeSurface(temp); /* Frees the two background images from memory*/
   SDL_FreeSurface(temp2);
+  FreeMusic(music);
   exit(0); /*technically this will end the program, but the compiler likes all functions that can return a value TO return a value*/
   FreeFighter(f); /* Clean up any used data by the fighters*/
   FreeFighter(f2);
@@ -151,6 +157,7 @@ void CleanUpAll()
 void Init_All()
 {
   Init_Graphics();
+  InitMusic();
   InitBck();
   InitFighterList();
   InitFighterSprite();
