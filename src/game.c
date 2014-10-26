@@ -100,7 +100,33 @@ int main(int argc, char *argv[])
 	if(f->health <= 0 || f2->health <= 0)
 	{
 		done = 1; /* Upon defeat the game exits */
+		if(f2->health <= 0)
+			fprintf(stdout,"Game Over: Strider Hiryu Wins\n");
+		else
+			fprintf(stdout,"Game Over: Dr. Doom Wins\n");
 	}
+	/*
+	if(f->health <= 0)
+	{
+		if(v_screen != NULL)
+		{
+			FreeSprite(v_screen);
+		}
+		v_screen = LoadSprite("images/StriderVictory.png",1024,768);
+		DrawSprite(v_screen,victory,500,500,0);
+		done = 1;
+	}
+	else if(f2->health <= 0)
+	{
+		if(v_screen != NULL)
+		{
+			FreeSprite(v_screen);
+		}
+		v_screen = LoadSprite("images/DoomVictory.png",1024,768);
+			DrawSprite(v_screen,victory,500,500,0);
+		done = 1;
+	}
+	*/
     /* DrawMouse(); */
 	NextFrame();
 
@@ -111,7 +137,7 @@ int main(int argc, char *argv[])
   exit(0); /*technically this will end the program, but the compiler likes all functions that can return a value TO return a value*/
   FreeFighter(f); /* Clean up any used data by the fighters*/
   FreeFighter(f2);
-  FreeBck(tile,tile); /* Frees the two images used for the Parallax scrolling*/
+  FreeBck(tile,tile); /* Frees the two images used*/
   return 0;
 }
 
