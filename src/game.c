@@ -7,6 +7,7 @@
 #include "background.h"
 #include "audio.h"
 
+extern Fighter Fighters[MAX_FIGHTERS];
 extern SDL_Surface *screen;
 extern SDL_Surface *buffer; /*pointer to the draw buffer*/
 extern SDL_Rect Camera;
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
     SDL_BlitSurface(bg,NULL,buffer,NULL);
   tile = LoadSprite("images/32_32_16_2sprite.png",32,32);
   test = LoadSprite("images/testbck.png",32,32);
-music = Mix_LoadMUS("sounds/Clocktower.wav");
+	music = Mix_LoadMUS("sounds/Swamp.wav");
   /*
   if(tile != NULL)for(i = 0;i < 12;i++)
   {
@@ -140,10 +141,10 @@ music = Mix_LoadMUS("sounds/Clocktower.wav");
   SDL_FreeSurface(temp); /* Frees the two background images from memory*/
   SDL_FreeSurface(temp2);
   FreeMusic(music);
+  FreeBck(tile,tile); /* Frees the two images used*/
   exit(0); /*technically this will end the program, but the compiler likes all functions that can return a value TO return a value*/
   FreeFighter(f); /* Clean up any used data by the fighters*/
   FreeFighter(f2);
-  FreeBck(tile,tile); /* Frees the two images used*/
   return 0;
 }
 
