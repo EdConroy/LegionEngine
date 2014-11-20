@@ -1,10 +1,10 @@
 #include <stdlib.h>
+//#include <time.h>
 #include "glib.h"
 #include "SDL.h"
 #include "SDL_image.h"
 #include "graphics.h"
 #include "fighter.h"
-#include "background.h"
 #include "audio.h"
 
 extern Fighter Fighters[MAX_FIGHTERS];
@@ -19,10 +19,14 @@ void Init_All();
 /*notice the default arguments for main.  SDL expects main to look like that, so don't change it*/
 int main(int argc, char *argv[])
 {
+	/*
+	time_t time;
+	long cur;
+	localtime(&time);
+	*/
   SDL_Surface *temp, *temp2;
   SDL_Surface *bg;
   Sprite *tile;
-  Sprite *test;
   Mix_Music* music;
   Fighter* f;
   Fighter* f2;
@@ -43,7 +47,6 @@ int main(int argc, char *argv[])
   if(bg != NULL)
     SDL_BlitSurface(bg,NULL,buffer,NULL);
   tile = LoadSprite("images/32_32_16_2sprite.png",32,32);
-  test = LoadSprite("images/testbck.png",32,32);
 	music = Mix_LoadMUS("sounds/Swamp.wav");
   /*
   if(tile != NULL)for(i = 0;i < 12;i++)
@@ -84,15 +87,14 @@ int main(int argc, char *argv[])
 			current_stage = 0;
 		}
 	}
-	Parallax(test,test,buffer,32,32); /* Causes two bars to move across the background at different paces causing
-									  a Parallax effect*/
 	FighterPull(f, keys); /* Gets the key input from the user */
 	FighterPull2(f2,keys);
 	FighterController1(f,f2,screen); /* Translates the key input into actions*/
 	FighterController(f,f2,screen,keys);
+	DrawFighter1(f,FIGHT_STRIDER,screen);
+	DrawFighter1(f2,FIGHT_DOOM,screen);
 	/*
 	UpdateFighter(f,f2);
-	DrawFighter1(f,screen);
 	*/
 	DrawHealthBar(f,screen,0,0);
 	DrawHealthBar(f2,screen,610,0);
@@ -141,7 +143,6 @@ int main(int argc, char *argv[])
   SDL_FreeSurface(temp); /* Frees the two background images from memory*/
   SDL_FreeSurface(temp2);
   FreeMusic(music);
-  FreeBck(tile,tile); /* Frees the two images used*/
   exit(0); /*technically this will end the program, but the compiler likes all functions that can return a value TO return a value*/
   FreeFighter(f); /* Clean up any used data by the fighters*/
   FreeFighter(f2);
@@ -159,7 +160,6 @@ void Init_All()
 {
   Init_Graphics();
   InitMusic();
-  InitBck();
   InitFighterList();
   InitFighterSprite();
   /* InitMouse(); */
