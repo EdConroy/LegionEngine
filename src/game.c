@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 	FighterPull(f, keys); /* Gets the key input from the user */
 	FighterPull2(f2,keys);
 	FighterController1(f,f2,screen); /* Translates the key input into actions*/
-	FighterController(f,f2,screen,keys);
+	FighterController(f,f2,screen);
 	DrawFighter1(f,FIGHT_STRIDER,screen);
 	DrawFighter1(f2,FIGHT_DOOM,screen);
 	/*
