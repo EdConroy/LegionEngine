@@ -203,7 +203,7 @@ void FighterPull2(Fighter* f2, Uint8* keys)
 			f2->flags = FIGHTERFLAG_JUMP;
 	}
 }
-/* Draws the player character based on their current flag */
+/* Draws the player character based on their current flag, FIXME */
 void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 {
 	int frame_count, frame_count2;
@@ -486,7 +486,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 	}
 }
 /* Player 2's fighter controller that does all three tasks at the same time */
-void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* keys)
+void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 {
 	int i = 0;
 	f2->f_jump = NULL;
