@@ -9,6 +9,8 @@
 
 #define MAX_FIGHTERS				2
 
+#define FIGHT_STRIDER				0
+#define FIGHT_DOOM					1
 /* 
 I should enumerate these but I got caught up in a Vin Diesel
 brutally murders a bunch of people in space movie to change it
@@ -83,6 +85,7 @@ typedef struct Fighter_T
 	long flags; /* This is your brain*/
 	long anim_flags; /* This is your brain on drugs*/
 	long f_jump; /* flag to determine the state in the air of the fighter */
+	long char_flag; /* Flag that indicates the player character*/ 
 }Fighter;
 
 void InitFighterSprite(); /* Sets the default animation state for fighters */
@@ -98,7 +101,7 @@ void FighterPull2(Fighter* f2, Uint8* keys); /* Same as FighterPull except for p
 											 Fighter Pull in the future but for now it will have to suffice. 
 											 Not used in Demo */
 
-void DrawFighter1(Fighter* f1, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull: Not used in Demo */
+void DrawFighter1(Fighter* f1, long character, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull: Not used in Demo */
 
 void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer);
 void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* keys);/* Does all three of the aforementioned methods
