@@ -104,7 +104,7 @@ void FighterPull2(Fighter* f2, Uint8* keys); /* Same as FighterPull except for p
 void DrawFighter1(Fighter* f1, long character, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull: Not used in Demo */
 
 void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer);
-void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer, Uint8* keys);/* Does all three of the aforementioned methods
+void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer);/* Does all three of the aforementioned methods
 																				   really ineffiecent but functional.  Also a nightmare
 																				   to make sense of if you didn't work on it */
 void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);/* Makes the health bar for both green and red health*/
