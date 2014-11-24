@@ -1327,16 +1327,45 @@ void LoadFighter(Fighter* f, long character)
 			fscanf(pFile,"%i",&f->launch_dmg);
 			fscanf(pFile,"%s",buffer);
 		}
-		if(strcmp(buffer,"hitbox width:")==0)
-		{
-			fscanf(pFile,"%i",&f->hitbox.w);
-			fscanf(pFile,"%s",buffer);
-		}
-		if(strcmp(buffer,"hitbox height:")==0)
-		{
-			fscanf(pFile,"%i",&f->hitbox.h);
-			fscanf(pFile,"%s",buffer);
-		}
 	}
 	fclose(pFile);
+}
+void EditFighter(Fighter* f)
+{
+	unsigned int value = 0;
+	int editing = 0;
+	do
+	{
+		fprintf(stdout,"Do you want to edit a fighter?\n 1 = no\n 0 = yes\n");
+		scanf("%d",&value);
+		if(value == 1)
+		{
+			  editing = 1;
+		}
+		else
+		{
+			fprintf(stdout,"Health: \n");
+			scanf("%d",&value);
+			f->health = value;
+
+			fprintf(stdout,"Light: \n");
+			scanf("%d",&value);
+			f->light_dmg = value;
+
+			fprintf(stdout,"Medium: \n");
+			scanf("%d",&value);
+			f->med_dmg = value;
+
+			fprintf(stdout,"Heavy: \n");
+			scanf("%d",&value);
+			f->launch_dmg = value;
+
+			fprintf(stdout,"Launch: \n");
+			scanf("%d",&value);
+			f->launch_dmg = value;
+		}
+		fprintf(stdout,"Done!\n");
+		editing = 1;
+	}
+	while(editing = 0);
 }
