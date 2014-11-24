@@ -37,7 +37,7 @@ void InitFighterSprite()
 	F_Sprite.player2_frame = 0;
 }
 /* Sets the first player's data */
-void InitCombatant(Fighter* f)
+void InitCombatant(Fighter* f, long character)
 {
 	f->health = 300;
 	f->x = 110;
@@ -53,9 +53,10 @@ void InitCombatant(Fighter* f)
 	f->flags = 0;
 	f->anim_flags = 0;
 	f->f_jump = 0;
+	f->char_flag = character;
 }
 /* Sets the second player's data */
-void InitCombatant2(Fighter* f)
+void InitCombatant2(Fighter* f, long character)
 {
 	f->health = 300;
 	f->x = 610;
@@ -71,6 +72,7 @@ void InitCombatant2(Fighter* f)
 	f->flags = 0;
 	f->anim_flags = 0;
 	f->f_jump = 0;
+	f->char_flag = character;
 }
 /* Gets the key strokes from the user and applys the approriate flags to the player character */
 void FighterPull(Fighter* f1, Uint8* keys)
@@ -204,10 +206,9 @@ void FighterPull2(Fighter* f2, Uint8* keys)
 	}
 }
 /* Draws the player character based on their current flag, FIXME */
-void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
+void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 {
-	int frame_count, frame_count2;
-	f1->char_flag = character;
+	int frame_count;
 	if(f1->anim_flags == ANIMFLAG_WALKL)
 	{
 		if(f1->sprite != NULL) FreeSprite(f1->sprite);
@@ -219,7 +220,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomWalkBckReversed.png",153,140);
-			frame_count2 = 8;
+			frame_count = 8;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoLeft.png",164,141);
+			frame_count = 11;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManRun.png",96,80);
+			frame_count = 12;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelLeft.png",230,184);
+			frame_count = 2;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_WALKR)
@@ -233,7 +249,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomWalkFwdReversed.png",154,144);
-			frame_count2 = 8;
+			frame_count = 8;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoRight.png",180,141);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManRun.png",96,80);
+			frame_count = 12;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelRight.png",253,184);
+			frame_count = 2;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_CROUCH)
@@ -247,7 +278,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomCrouch.png",129,88);
-			frame_count2 = 1;
+			frame_count = 1;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoCrouch.png",156,141);
+			frame_count = 1;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManCrouch.png",56,77);
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelCrouch.png",173,184);
+			frame_count = 1;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_JUMP)
@@ -261,7 +307,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
-			frame_count2 = 10;
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoIdle.png",106,141);
+			frame_count = 13;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManIdle.png",83,77);
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelIdle.png",178,184);
+			frame_count = 3;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_LIGHT)
@@ -275,7 +336,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomLightAttackReversed.png",215,134);
-			frame_count2 = 2;
+			frame_count = 2;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoLight.png",210,141);
+			frame_count = 6;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManLight.png",116,74);
+			frame_count = 3;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelLight.png",240,184);
+			frame_count = 4;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_MED)
@@ -289,7 +365,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomMediumAttackReversed.png",219,145);
-			frame_count2 = 5;
+			frame_count = 5;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoMedium.png",244,141);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManMedium.png",112,76);
+			frame_count = 5;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelMedium.png",277,184);
+			frame_count = 3;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_HEV)
@@ -303,7 +394,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomHeavyAttackReversed.png",270,173);
-			frame_count2 = 8;
+			frame_count = 8;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoHeavy.png",263,154);
+			frame_count = 7;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManHeavy.png",116,108);
+			frame_count = 9;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelHeavy.png",286,184);
+			frame_count = 7;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_LAUNCH)
@@ -317,7 +423,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomLauncherAttack.png",286,151);
-			frame_count2 = 16;
+			frame_count = 16;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoLauncher.png",213,183);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManLauncher.png",111,128);
+			frame_count = 8;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelLauncher.png",240,219);
+			frame_count = 5;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_BLOCK)
@@ -331,7 +452,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomBlock.png",144,139);
-			frame_count2 = 4;
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoBlock.png",183,161);
+			frame_count = 17;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManBlock.png",90,87);
+			frame_count = 2;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelBlock.png",155,195);
+			frame_count = 1;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_BLOCKL)
@@ -345,7 +481,22 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomCrouchBlock.png",131,98);
-			frame_count2 = 3;
+			frame_count = 3;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoBlock.png",183,161);
+			frame_count = 17;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManBlock.png",90,87);
+			frame_count = 2;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelBlock.png",155,195);
+			frame_count = 1;
 		}
 	}
 	else
@@ -359,21 +510,362 @@ void DrawFighter1(Fighter* f1, long character, SDL_Surface *buffer)
 		else if(f1->char_flag == FIGHT_DOOM)
 		{
 			f1->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
-			frame_count2 = 10;
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoIdle.png",106,141);
+			frame_count = 13;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManIdle.png",83,77);
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelIdle.png",178,184);
+			frame_count = 3;
 		}
 	}
 	DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
-	if(f1->char_flag == FIGHT_STRIDER)
-		F_Sprite.frame = (F_Sprite.frame + 1) % frame_count;
-	else if(f1->char_flag == FIGHT_DOOM)
-		F_Sprite.player2_frame = (F_Sprite.player2_frame + 1) % frame_count2;
+	F_Sprite.frame = (F_Sprite.frame + 1) % frame_count;
 	f1->sprite = NULL;
 	if(f1->sprite != NULL)
 	{
 		FreeSprite(f1->sprite);
 	}
 }
-
+void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
+{
+	int frame_count;
+	if(f1->anim_flags == ANIMFLAG_WALKL)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomWalkBckReversed.png",153,140);
+			frame_count = 8;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoLeft.png",164,141);
+			frame_count = 11;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManRun.png",96,80);
+			frame_count = 12;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelLeft.png",230,184);
+			frame_count = 2;
+		}
+	}
+	else if(f1->anim_flags == ANIMFLAG_WALKR)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomWalkFwdReversed.png",154,144);
+			frame_count = 8;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoRight.png",180,141);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManRun.png",96,80);
+			frame_count = 12;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelRight.png",253,184);
+			frame_count = 2;
+		}
+	}
+	else if(f1->anim_flags == ANIMFLAG_CROUCH)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderCrouch.png",108,68);
+			frame_count = 6;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomCrouch.png",129,88);
+			frame_count = 1;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoCrouch.png",156,141);
+			frame_count = 1;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManCrouch.png",56,77);
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelCrouch.png",173,184);
+			frame_count = 1;
+		}
+	}
+	else if(f1->anim_flags == ANIMFLAG_JUMP)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
+			frame_count = 3;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoIdle.png",106,141);
+			frame_count = 13;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManIdle.png",83,77);
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelIdle.png",178,184);
+			frame_count = 3;
+		}
+	}
+	else if(f1->anim_flags == ANIMFLAG_LIGHT)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderLightAttack.png",179,138);
+			frame_count = 9;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomLightAttackReversed.png",215,134);
+			frame_count = 2;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoLight.png",210,141);
+			frame_count = 6;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManLight.png",116,74);
+			frame_count = 3;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelLight.png",240,184);
+			frame_count = 4;
+		}
+	}
+	else if(f1->anim_flags == ANIMFLAG_MED)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderMediumAttack.png",198,140);
+			frame_count = 7;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomMediumAttackReversed.png",219,145);
+			frame_count = 5;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoMedium.png",244,141);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManMedium.png",112,76);
+			frame_count = 5;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelMedium.png",277,184);
+			frame_count = 3;
+		}
+	}
+	else if(f1->anim_flags == ANIMFLAG_HEV)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderHeavyAttack.png",206,140);
+			frame_count = 13;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomHeavyAttackReversed.png",270,173);
+			frame_count = 8;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoHeavy.png",263,154);
+			frame_count = 7;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManHeavy.png",116,108);
+			frame_count = 9;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelHeavy.png",286,184);
+			frame_count = 7;
+		}
+	}
+	else if(f1->anim_flags == ANIMFLAG_LAUNCH)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderLauncherAttack.png",198,162);
+			frame_count = 8;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomLauncherAttack.png",286,151);
+			frame_count = 16;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoLauncher.png",213,183);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManLauncher.png",111,128);
+			frame_count = 8;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelLauncher.png",240,219);
+			frame_count = 5;
+		}
+	}
+	else if(f1->anim_flags == ANIMFLAG_BLOCK)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderBlock.png",103,110);
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomBlock.png",144,139);
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoBlock.png",183,161);
+			frame_count = 17;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManBlock.png",90,87);
+			frame_count = 2;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelBlock.png",155,195);
+			frame_count = 1;
+		}
+	}
+	else if(f1->anim_flags == ANIMFLAG_BLOCKL)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderBlock.png",103,110);
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomCrouchBlock.png",131,98);
+			frame_count = 3;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoBlock.png",183,161);
+			frame_count = 17;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManBlock.png",90,87);
+			frame_count = 2;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelBlock.png",155,195);
+			frame_count = 1;
+		}
+	}
+	else
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
+			frame_count = 3;
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomIdleReversed.png",180,150);
+			frame_count = 10;
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoIdle.png",106,141);
+			frame_count = 13;
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManIdle.png",83,77);
+			frame_count = 4;
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelIdle.png",178,184);
+			frame_count = 3;
+		}
+	}
+	DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
+	F_Sprite.player2_frame = (F_Sprite.player2_frame + 1) % frame_count;
+	f1->sprite = NULL;
+	if(f1->sprite != NULL)
+	{
+		FreeSprite(f1->sprite);
+	}
+}
 /* Performs two of the three tasks at the same time, very inefficent but functional used for player one only */
 void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 {
@@ -412,9 +904,30 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		/* Light Attack: does the pulling, drawing, and logic for the attack */
 		int has_hit = 0;
 		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
+		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_STRIDER)
 		{
-			f2->health -= 15;
+			f2->health -= f1->light_dmg;
+			//f2->health -= 15;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_DOOM)
+		{
+			f2->health -= f1->light_dmg;
+			//f2->health -= 15;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f2->health -= f1->light_dmg;
+			//f2->health -= 15;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MAGNETO)
+		{
+			f2->health -= f1->light_dmg;
+			//f2->health -= 10;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_SENTINEL)
+		{
+			f2->health -= f1->light_dmg;
+			//f2->health -= 25;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_MED && f1->flags != FIGHTERFLAG_JUMP)
@@ -422,9 +935,30 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		/* Medium Attack: does the pulling, drawing, and logic for the attack */
 		int has_hit = 0;
 		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL)
+		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_STRIDER)
 		{
-			f2->health -= 25;
+			f2->health -= f1->med_dmg;
+			//f2->health -= 25;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_DOOM)
+		{
+			f2->health -= f1->med_dmg;
+			//f2->health -= 25;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f2->health -= f1->med_dmg;
+			//f2->health -= 23;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MAGNETO)
+		{
+			f2->health -= f1->med_dmg;
+			//f2->health -= 19;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_SENTINEL)
+		{
+			f2->health -= f1->med_dmg;
+			//f2->health -= 21;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_HEV && f1->flags != FIGHTERFLAG_JUMP)
@@ -432,9 +966,30 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		/* Heavy Attack: does the pulling, drawing, and logic for the attack */
 		int has_hit = 0;
 		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
+		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_STRIDER)
 		{
-			f2->health -= 50;
+			f2->health -= f1->hev_dmg;
+			//f2->health -= 50;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_DOOM)
+		{
+			f2->health -= f1->hev_dmg;
+			//f2->health -= 50;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f2->health -= f1->hev_dmg;
+			//f2->health -= 35;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MAGNETO)
+		{
+			f2->health -= f1->hev_dmg;
+			//f2->health -= 44;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_SENTINEL)
+		{
+			f2->health -= f1->hev_dmg;
+			//f2->health -= 55;
 		}
 	}
 	else if(f1->anim_flags == ANIMFLAG_LAUNCH && f1->flags != FIGHTERFLAG_JUMP)
@@ -446,9 +1001,30 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		*/
 		int has_hit = 0;
 		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL)
+		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_STRIDER)
 		{
-			f2->health -= 150;
+			f2->health -= f1->launch_dmg;
+			//f2->health -= 150;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_DOOM)
+		{
+			f2->health -= f1->launch_dmg;
+			//f2->health -= 150;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f2->health -= f1->launch_dmg;
+			//f2->health -= 150;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MAGNETO)
+		{
+			f2->health -= f1->launch_dmg;
+			//f2->health -= 150;
+		}
+		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_SENTINEL)
+		{
+			f2->health -= f1->launch_dmg;
+			//f2->health -= 150;
 		}
 	}	
 	if(f1->flags == FIGHTERFLAG_JUMP)
@@ -622,4 +1198,75 @@ void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y)
 	for(int i=0; i<f->health;++i)
 		for(int j=0; j < 30; ++j)
 			DrawPixel(buffer,0,255,0,(30 + i) + x,(30 + j) + y);
+}
+void LoadFighter(Fighter* f, long character)
+{
+	char* filepath;
+	if(character == FIGHT_STRIDER)
+	{
+		filepath = "fighters/StriderData.txt";
+	}
+	else if(character == FIGHT_DOOM)
+	{
+		filepath = "fighters/DoomData.txt";
+	}
+	else if(character == FIGHT_MEGAMAN)
+	{
+		filepath = "fighters/MegaManData.txt";
+	}
+	else if(character == FIGHT_MAGNETO)
+	{
+		filepath = "fighters/MagnetoData.txt";
+	}
+	else if(character == FIGHT_SENTINEL)
+	{
+		filepath = "fighters/SentinelData.txt";
+	}
+	char buffer[255];
+	int current_line = 0;
+	FILE* pFile = NULL;
+	pFile = fopen(filepath,"r");
+	if(!pFile)
+	{
+		fprintf(stdout,"character file not found: ",filepath);
+		return;
+	}
+	if(fscanf(pFile,"%s",buffer))
+	{
+		if(strcmp(buffer,"health:")==0)
+		{
+			fscanf(pFile,"%i",&f->health);
+			fscanf(pFile,"%s",buffer);
+		}
+		if(strcmp(buffer,"light:")==0)
+		{
+			fscanf(pFile,"%i",&f->light_dmg);
+			fscanf(pFile,"%s",buffer);
+		}
+		if(strcmp(buffer,"medium:")==0)
+		{
+			fscanf(pFile,"%i",&f->med_dmg);
+			fscanf(pFile,"%s",buffer);
+		}
+		if(strcmp(buffer,"heavy:")==0)
+		{
+			fscanf(pFile,"%i",&f->hev_dmg);
+			fscanf(pFile,"%s",buffer);
+		}
+		if(strcmp(buffer,"launcher:")==0)
+		{
+			fscanf(pFile,"%i",&f->launch_dmg);
+			fscanf(pFile,"%s",buffer);
+		}
+		if(strcmp(buffer,"hitbox width:")==0)
+		{
+			fscanf(pFile,"%i",&f->hitbox.w);
+			fscanf(pFile,"%s",buffer);
+		}
+		if(strcmp(buffer,"hitbox height:")==0)
+		{
+			fscanf(pFile,"%i",&f->hitbox.h);
+			fscanf(pFile,"%s",buffer);
+		}
+	}
 }
