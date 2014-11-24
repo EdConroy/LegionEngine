@@ -54,6 +54,7 @@ void InitCombatant(Fighter* f, long character)
 	f->anim_flags = 0;
 	f->f_jump = 0;
 	f->char_flag = character;
+	f->stun_timer = 0;
 }
 /* Sets the second player's data */
 void InitCombatant2(Fighter* f, long character)
@@ -73,11 +74,17 @@ void InitCombatant2(Fighter* f, long character)
 	f->anim_flags = 0;
 	f->f_jump = 0;
 	f->char_flag = character;
+	f->stun_timer = 0;
 }
 /* Gets the key strokes from the user and applys the approriate flags to the player character */
 void FighterPull(Fighter* f1, Uint8* keys)
 {
-	if(keys[SDLK_RIGHT] && f1->flags == FIGHTERFLAG_JUMP && f1->f_jump != JUMPFLAG_MOVEL)
+	if(f1->stun_timer > 0)
+	{
+		f1->flags = FIGHTERFLAG_HITSTUN;
+		f1->anim_flags = ANIMFLAG_HITSTUN;
+	}
+	else if(keys[SDLK_RIGHT] && f1->flags == FIGHTERFLAG_JUMP && f1->f_jump != JUMPFLAG_MOVEL)
 	{
 		f1->f_jump = JUMPFLAG_MOVER;
 	}
@@ -147,7 +154,12 @@ void FighterPull(Fighter* f1, Uint8* keys)
 /* Same code used for fighter 1 but for fighter 2, not utilized in the demo because it produces some wierd bugs */
 void FighterPull2(Fighter* f2, Uint8* keys)
 {
-	if(keys[SDLK_d] && f2->flags != FIGHTERFLAG_JUMP)
+	if(f2->stun_timer > 0)
+	{
+		f2->flags = FIGHTERFLAG_HITSTUN;
+		f2->anim_flags = ANIMFLAG_HITSTUN;
+	}
+	else if(keys[SDLK_d] && f2->flags != FIGHTERFLAG_JUMP)
 	{
 		f2->flags = FIGHTERFLAG_WALKL;
 		f2->anim_flags = ANIMFLAG_WALKL;
@@ -209,7 +221,32 @@ void FighterPull2(Fighter* f2, Uint8* keys)
 void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 {
 	int frame_count;
-	if(f1->anim_flags == ANIMFLAG_WALKL)
+	if(f1->anim_flags == ANIMFLAG_HITSTUN)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderHitstun.png",107,91);
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomHitstun.png",158,143);
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoHitstun.png",154,141);
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManHitstun.png",91,76);
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelHitstun.png",218,201);
+		}
+		frame_count = 1;
+	}
+	else if(f1->anim_flags == ANIMFLAG_WALKL)
 	{
 		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
@@ -539,7 +576,32 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 {
 	int frame_count;
-	if(f1->anim_flags == ANIMFLAG_WALKL)
+	if(f1->anim_flags == ANIMFLAG_HITSTUN)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderHitstun.png",107,91);
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomHitstun.png",158,143);
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoHitstun.png",154,141);
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManHitstun.png",91,76);
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelHitstun.png",218,201);
+		}
+		frame_count = 1;
+	}
+	else if(f1->anim_flags == ANIMFLAG_WALKL)
 	{
 		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
@@ -869,295 +931,302 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 /* Performs two of the three tasks at the same time, very inefficent but functional used for player one only */
 void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 {
-	int i = 0;
 	f1->f_jump = NULL;
-	if(f1->flags == FIGHTERFLAG_WALKR)
+	if(f1->stun_timer <= 0) 
 	{
-		/* Walk Right code, prevents the player from walking off of the stage*/
-		if(f1->x < 845)
+		if(f1->flags == FIGHTERFLAG_WALKR)
 		{
-			f1->x = f1->x + f1->walk_acc;
-			f1->hitbox.x = f1->x;
+			/* Walk Right code, prevents the player from walking off of the stage*/
+			if(f1->x < 845)
+			{
+				f1->x = f1->x + f1->walk_acc;
+				f1->hitbox.x = f1->x;
+			}
+			else
+			{
+				/* If the player attempts to walk off of the stage set his state to idle*/
+				f1->flags = FIGHTERFLAG_IDLE;
+			}
 		}
-		else
+		else if(f1->flags == FIGHTERFLAG_WALKL)
 		{
-			/* If the player attempts to walk off of the stage set his state to idle*/
-			f1->flags = FIGHTERFLAG_IDLE;
+			/* Walk left code, prevents the player from walking off of the stage*/
+			if(f1->x > 0)
+			{
+				f1->x = f1->x - f1->walk_acc;
+				f1->hitbox.x = f1->x;
+			}
+			else
+			{
+				/* If the player attempts to walk off of the stage he is set to idle*/
+				f1->flags = FIGHTERFLAG_IDLE;
+			}
 		}
-	}
-	else if(f1->flags == FIGHTERFLAG_WALKL)
-	{
-		/* Walk left code, prevents the player from walking off of the stage*/
-		if(f1->x > 0)
+		else if(f1->anim_flags == ANIMFLAG_LIGHT && f1->flags != FIGHTERFLAG_JUMP)
 		{
-			f1->x = f1->x - f1->walk_acc;
-			f1->hitbox.x = f1->x;
+			/* Light Attack: does the pulling, drawing, and logic for the attack */
+			int has_hit = 0;
+			has_hit = AABB(f1->hitbox,f2->hitbox);
+			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_STRIDER)
+			{
+				f2->health -= f1->light_dmg;
+				f2->stun_timer = 3;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_DOOM)
+			{
+				f2->health -= f1->light_dmg;
+				f2->stun_timer = 3;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MEGAMAN)
+			{
+				f2->health -= f1->light_dmg;
+				f2->stun_timer = 3;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MAGNETO)
+			{
+				f2->health -= f1->light_dmg;
+				f2->stun_timer = 3;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_SENTINEL)
+			{
+				f2->health -= f1->light_dmg;
+				f2->stun_timer = 3;
+			}
 		}
-		else
+		else if(f1->anim_flags == ANIMFLAG_MED && f1->flags != FIGHTERFLAG_JUMP)
 		{
-			/* If the player attempts to walk off of the stage he is set to idle*/
-			f1->flags = FIGHTERFLAG_IDLE;
+			/* Medium Attack: does the pulling, drawing, and logic for the attack */
+			int has_hit = 0;
+			has_hit = AABB(f1->hitbox,f2->hitbox);
+			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_STRIDER)
+			{
+				f2->health -= f1->med_dmg;
+				f2->stun_timer = 5;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_DOOM)
+			{
+				f2->health -= f1->med_dmg;
+				f2->stun_timer = 5;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MEGAMAN)
+			{
+				f2->health -= f1->med_dmg;
+				f2->stun_timer = 5;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MAGNETO)
+			{
+				f2->health -= f1->med_dmg;
+				f2->stun_timer = 5;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_SENTINEL)
+			{
+				f2->health -= f1->med_dmg;
+				f2->stun_timer = 5;
+			}
 		}
-	}
-	else if(f1->anim_flags == ANIMFLAG_LIGHT && f1->flags != FIGHTERFLAG_JUMP)
-	{
-		/* Light Attack: does the pulling, drawing, and logic for the attack */
-		int has_hit = 0;
-		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_STRIDER)
+		else if(f1->anim_flags == ANIMFLAG_HEV && f1->flags != FIGHTERFLAG_JUMP)
 		{
-			f2->health -= f1->light_dmg;
-			//f2->health -= 15;
+			/* Heavy Attack: does the pulling, drawing, and logic for the attack */
+			int has_hit = 0;
+			has_hit = AABB(f1->hitbox,f2->hitbox);
+			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_STRIDER)
+			{
+				f2->health -= f1->hev_dmg;
+				f2->stun_timer = 7;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_DOOM)
+			{
+				f2->health -= f1->hev_dmg;
+				f2->stun_timer = 7;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MEGAMAN)
+			{
+				f2->health -= f1->hev_dmg;
+				f2->stun_timer = 7;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MAGNETO)
+			{
+				f2->health -= f1->hev_dmg;
+				f2->stun_timer = 7;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_SENTINEL)
+			{
+				f2->health -= f1->hev_dmg;
+				f2->stun_timer = 7;
+			}
 		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_DOOM)
+		else if(f1->anim_flags == ANIMFLAG_LAUNCH && f1->flags != FIGHTERFLAG_JUMP)
 		{
-			f2->health -= f1->light_dmg;
-			//f2->health -= 15;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MEGAMAN)
+			/* 
+			 * Launcher Attack:  Used to knock the player high in the air for air combos
+			 * The move is currently a heavily damaging move because the functionality has not
+			 * been programmed in yet
+			*/
+			int has_hit = 0;
+			has_hit = AABB(f1->hitbox,f2->hitbox);
+			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_STRIDER)
+			{
+				f2->health -= f1->launch_dmg;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_DOOM)
+			{
+				f2->health -= f1->launch_dmg;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MEGAMAN)
+			{
+				f2->health -= f1->launch_dmg;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MAGNETO)
+			{
+				f2->health -= f1->launch_dmg;
+			}
+			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_SENTINEL)
+			{
+				f2->health -= f1->launch_dmg;
+			}
+		}	
+		if(f1->flags == FIGHTERFLAG_JUMP)
 		{
-			f2->health -= f1->light_dmg;
-			//f2->health -= 15;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MAGNETO)
-		{
-			f2->health -= f1->light_dmg;
-			//f2->health -= 10;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_SENTINEL)
-		{
-			f2->health -= f1->light_dmg;
-			//f2->health -= 25;
-		}
-	}
-	else if(f1->anim_flags == ANIMFLAG_MED && f1->flags != FIGHTERFLAG_JUMP)
-	{
-		/* Medium Attack: does the pulling, drawing, and logic for the attack */
-		int has_hit = 0;
-		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_STRIDER)
-		{
-			f2->health -= f1->med_dmg;
-			//f2->health -= 25;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_DOOM)
-		{
-			f2->health -= f1->med_dmg;
-			//f2->health -= 25;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MEGAMAN)
-		{
-			f2->health -= f1->med_dmg;
-			//f2->health -= 23;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MAGNETO)
-		{
-			f2->health -= f1->med_dmg;
-			//f2->health -= 19;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_SENTINEL)
-		{
-			f2->health -= f1->med_dmg;
-			//f2->health -= 21;
-		}
-	}
-	else if(f1->anim_flags == ANIMFLAG_HEV && f1->flags != FIGHTERFLAG_JUMP)
-	{
-		/* Heavy Attack: does the pulling, drawing, and logic for the attack */
-		int has_hit = 0;
-		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_STRIDER)
-		{
-			f2->health -= f1->hev_dmg;
-			//f2->health -= 50;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_DOOM)
-		{
-			f2->health -= f1->hev_dmg;
-			//f2->health -= 50;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MEGAMAN)
-		{
-			f2->health -= f1->hev_dmg;
-			//f2->health -= 35;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MAGNETO)
-		{
-			f2->health -= f1->hev_dmg;
-			//f2->health -= 44;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_SENTINEL)
-		{
-			f2->health -= f1->hev_dmg;
-			//f2->health -= 55;
-		}
-	}
-	else if(f1->anim_flags == ANIMFLAG_LAUNCH && f1->flags != FIGHTERFLAG_JUMP)
-	{
-		/* 
-		 * Launcher Attack:  Used to knock the player high in the air for air combos
-		 * The move is currently a heavily damaging move because the functionality has not
-		 * been programmed in yet
-		*/
-		int has_hit = 0;
-		has_hit = AABB(f1->hitbox,f2->hitbox);
-		if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_STRIDER)
-		{
-			f2->health -= f1->launch_dmg;
-			//f2->health -= 150;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_DOOM)
-		{
-			f2->health -= f1->launch_dmg;
-			//f2->health -= 150;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MEGAMAN)
-		{
-			f2->health -= f1->launch_dmg;
-			//f2->health -= 150;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MAGNETO)
-		{
-			f2->health -= f1->launch_dmg;
-			//f2->health -= 150;
-		}
-		else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_SENTINEL)
-		{
-			f2->health -= f1->launch_dmg;
-			//f2->health -= 150;
-		}
-	}	
-	if(f1->flags == FIGHTERFLAG_JUMP)
-	{
-		/* Does the logic for jumping when the state is jumping */
-		/* 
-		Begining to apply directional jumping, still under construction 
-		if(f1->f_jump == JUMPFLAG_MOVER && f1->x < 845 )
-		{
-			f1->x = f1->x + f1->walk_acc;
-			f1->hitbox.x = f1->x;
-		}
-		else if(f1->f_jump == JUMPFLAG_MOVEL && f1->x > 0)
-		{
-			f1->x = f1->x - f1->walk_acc;
-			f1->hitbox.x = f1->x;
-		}
-		*/
-		f1->y = f1->y - f1->vy;
-		f1->vy -= 1;
-		f1->hitbox.y = f1->y;
-		if(f1->y >= 610 && f1->vy != 15)
-		{
-			/* When the player touches the ground the state is set to idle */
-			f1->y = 610;
-			f1->vy = 15;
+			/* Does the logic for jumping when the state is jumping */
+			/* 
+			Begining to apply directional jumping, still under construction 
+			if(f1->f_jump == JUMPFLAG_MOVER && f1->x < 845 )
+			{
+				f1->x = f1->x + f1->walk_acc;
+				f1->hitbox.x = f1->x;
+			}
+			else if(f1->f_jump == JUMPFLAG_MOVEL && f1->x > 0)
+			{
+				f1->x = f1->x - f1->walk_acc;
+				f1->hitbox.x = f1->x;
+			}
+			*/
+			f1->y = f1->y - f1->vy;
+			f1->vy -= 1;
 			f1->hitbox.y = f1->y;
-			f1->flags = FIGHTERFLAG_IDLE;
+			if(f1->y >= 610 && f1->vy != 15)
+			{
+				/* When the player touches the ground the state is set to idle */
+				f1->y = 610;
+				f1->vy = 15;
+				f1->hitbox.y = f1->y;
+				f1->flags = FIGHTERFLAG_IDLE;
+			}
+		}
+		else if(f1->flags == FIGHTERFLAG_IDLE)
+		{
+			f1->flags = FIGHTERFLAG_NOBLOCK;
+			f1->f_jump = NULL;
 		}
 	}
-	else if(f1->flags == FIGHTERFLAG_IDLE)
-	{
-		f1->flags = FIGHTERFLAG_NOBLOCK;
-		f1->f_jump = NULL;
-	}
+	if(f1->stun_timer > 0)
+		--f1->stun_timer;
+	if(f1->stun_timer < 0)
+		f1->stun_timer = 0;
 }
 /* Player 2's fighter controller that does all three tasks at the same time */
 void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 {
-	int i = 0;
 	f2->f_jump = NULL;
-	if(f2->flags == FIGHTERFLAG_WALKL && f2->flags != FIGHTERFLAG_JUMP)
+	if(f2->stun_timer <= 0)
 	{
-		/* Walk Left Code, prevents the player from walking off screen */
-		if(f2->x < 845)
+		if(f2->flags == FIGHTERFLAG_WALKL && f2->flags != FIGHTERFLAG_JUMP)
 		{
-			f2->x = f2->x + f2->walk_acc;
-			f2->hitbox.x = f2->x;
+			/* Walk Left Code, prevents the player from walking off screen */
+			if(f2->x < 845)
+			{
+				f2->x = f2->x + f2->walk_acc;
+				f2->hitbox.x = f2->x;
+			}
+			else
+			{
+				/* If the player tries to walk off screen display him as idle */
+				f2->flags = FIGHTERFLAG_IDLE;
+			}
 		}
-		else
+		else if(f2->flags == FIGHTERFLAG_WALKR && f2->flags != FIGHTERFLAG_JUMP)
 		{
-			/* If the player tries to walk off screen display him as idle */
-			f2->flags = FIGHTERFLAG_IDLE;
+			/* Walk Right Code, prevents the player from walking off screen */
+			if(f2->x > 0)
+			{
+				f2->x = f2->x - f2->walk_acc;
+				f2->hitbox.x = f2->x;
+			}
+			else
+			{
+				f2->flags = FIGHTERFLAG_IDLE;
+			}
 		}
-	}
-	else if(f2->flags == FIGHTERFLAG_WALKR && f2->flags != FIGHTERFLAG_JUMP)
-	{
-		/* Walk Right Code, prevents the player from walking off screen */
-		if(f2->x > 0)
+		else if(f2->anim_flags == ANIMFLAG_LIGHT && f2->flags != FIGHTERFLAG_JUMP)
 		{
-			f2->x = f2->x - f2->walk_acc;
-			f2->hitbox.x = f2->x;
+			/* Light Attack Code:  Pulls, draws, and does logic for Doom's light attack */
+			int has_hit2 = 0;
+			has_hit2 = AABB(f2->hitbox,f1->hitbox);
+			if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCK)
+			{
+				f1->health -= 15;
+			}
 		}
-		else
+		else if(f2->anim_flags == ANIMFLAG_MED && f2->flags != FIGHTERFLAG_JUMP)
 		{
-			f2->flags = FIGHTERFLAG_IDLE;
+			/* Medium Attack Code:  Pulls, draws, and does logic for Doom's medium attack */
+			int has_hit2 = 0;
+			has_hit2 = AABB(f2->hitbox,f1->hitbox);
+			if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
+			{
+				f1->health -= 25;
+			}
 		}
-	}
-	else if(f2->anim_flags == ANIMFLAG_LIGHT && f2->flags != FIGHTERFLAG_JUMP)
-	{
-		/* Light Attack Code:  Pulls, draws, and does logic for Doom's light attack */
-		int has_hit2 = 0;
-		has_hit2 = AABB(f2->hitbox,f1->hitbox);
-		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCK)
+		else if(f2->anim_flags == ANIMFLAG_HEV && f2->flags != FIGHTERFLAG_JUMP)
 		{
-			f1->health -= 15;
+			/* Heavy Attack Code:  Pulls, draws, and does logic for Doom's heavy attack */
+			int has_hit2 = 0;
+			has_hit2 = AABB(f2->hitbox,f1->hitbox);
+			if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
+			{
+				f1->health -= 50;
+			}
 		}
-	}
-	else if(f2->anim_flags == ANIMFLAG_MED && f2->flags != FIGHTERFLAG_JUMP)
-	{
-		/* Medium Attack Code:  Pulls, draws, and does logic for Doom's medium attack */
-		int has_hit2 = 0;
-		has_hit2 = AABB(f2->hitbox,f1->hitbox);
-		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
+		else if(f2->anim_flags == ANIMFLAG_LAUNCH && f2->flags != FIGHTERFLAG_JUMP)
 		{
-			f1->health -= 25;
+			/* 
+			 * Launcher Attack:  Used to knock the player high in the air for air combos
+			 * The move is currently a heavily damaging move because the functionality has not
+			 * been programmed in yet
+			*/
+			int has_hit2 = 0;
+			has_hit2 = AABB(f2->hitbox,f1->hitbox);
+			if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
+			{
+				f1->health -= 150;
+			}
 		}
-	}
-	else if(f2->anim_flags == ANIMFLAG_HEV && f2->flags != FIGHTERFLAG_JUMP)
-	{
-		/* Heavy Attack Code:  Pulls, draws, and does logic for Doom's heavy attack */
-		int has_hit2 = 0;
-		has_hit2 = AABB(f2->hitbox,f1->hitbox);
-		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
+		if(f2->flags == FIGHTERFLAG_JUMP)
 		{
-			f1->health -= 50;
-		}
-	}
-	else if(f2->anim_flags == ANIMFLAG_LAUNCH && f2->flags != FIGHTERFLAG_JUMP)
-	{
-		/* 
-		 * Launcher Attack:  Used to knock the player high in the air for air combos
-		 * The move is currently a heavily damaging move because the functionality has not
-		 * been programmed in yet
-		*/
-		int has_hit2 = 0;
-		has_hit2 = AABB(f2->hitbox,f1->hitbox);
-		if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
-		{
-			f1->health -= 150;
-		}
-	}
-	if(f2->flags == FIGHTERFLAG_JUMP)
-	{
-		/* Does the logic for jumping when the state is jumping */
-		f2->y = f2->y - f2->vy;
-		f2->vy -= 1;
-		f2->hitbox.y = f2->y;
-		if(f2->y >= 610 && f2->vy != 15)
-		{
-			/* When the player touches the ground the state is set to idle */
-			f2->y = 610;
-			f2->vy = 15;
+			/* Does the logic for jumping when the state is jumping */
+			f2->y = f2->y - f2->vy;
+			f2->vy -= 1;
 			f2->hitbox.y = f2->y;
-			f2->flags = FIGHTERFLAG_IDLE;
+			if(f2->y >= 610 && f2->vy != 15)
+			{
+				/* When the player touches the ground the state is set to idle */
+				f2->y = 610;
+				f2->vy = 15;
+				f2->hitbox.y = f2->y;
+				f2->flags = FIGHTERFLAG_IDLE;
+			}
+		}
+		else if(f2->flags == FIGHTERFLAG_IDLE)
+		{
+			/* Defaults to idle if nothing else */
+			f2->flags = FIGHTERFLAG_NOBLOCK;
+			f2->f_jump = NULL;
 		}
 	}
-	else if(f2->flags == FIGHTERFLAG_IDLE)
-	{
-		/* Defaults to idle if nothing else */
-		f2->flags = FIGHTERFLAG_NOBLOCK;
-		f2->f_jump = NULL;
-	}
+	if(f2->stun_timer > 0)
+		--f2->stun_timer;
+	if(f2->stun_timer < 0)
+		f2->stun_timer = 0;
 }
 /* Frees the memory that is held by the fighter */
 void FreeFighter(Fighter* f)
@@ -1269,4 +1338,5 @@ void LoadFighter(Fighter* f, long character)
 			fscanf(pFile,"%s",buffer);
 		}
 	}
+	fclose(pFile);
 }
