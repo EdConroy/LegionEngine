@@ -15,13 +15,7 @@ void InitFighterList()
 	int i;
 	for(i=0; i<MAX_FIGHTERS;++i)
 	{
-		Fighters[i].health = NULL;
-		Fighters[i].x = NULL;
-		Fighters[i].y = NULL;
-		Fighters[i].walk_speed = NULL;
-		Fighters[i].walk_acc = NULL;
-		Fighters[i].jump_speed = NULL;
-		Fighters[i].used = 0;
+		memset(&Fighters[i],0,sizeof(Fighter));
 	}
 }
 /* Gets the location of the fighter from the fighter list and returns the location */
@@ -1157,23 +1151,6 @@ void FreeFighter(Fighter* f)
 {	
 	FreeSprite(f->sprite);
 	memset(f,0,sizeof(Fighter));
-	/*
-	f->sprite = NULL;
-	f->health = NULL;
-	f->x = NULL;
-	f->y = NULL;
-	f->vy = NULL;
-	f->walk_acc = NULL;
-	f->walk_speed = NULL;
-	f->jump_speed = NULL;
-	f->hitbox.x = NULL;
-	f->hitbox.y = NULL;
-	f->hitbox.w = NULL;
-	f->hitbox.h = NULL;
-	f->flags = NULL;
-	f->anim_flags = NULL;
-	f->f_jump = NULL;
-	*/
 }
 /* Cleans up the fighter list if it hasn't already been cleaned */
 void CloseFighter()
