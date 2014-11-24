@@ -30,6 +30,7 @@ starts trolling Satan then Satan rage quits
 #define FIGHTERFLAG_IDLE			7
 #define FIGHTERFLAG_CROUCH			8
 #define FIGHTERFLAG_BLOCKL			9
+#define FIGHTERFLAG_HITSTUN			10
 /*
 This would be a lot funnier if you read these in Charles Barkley's voice
 */
