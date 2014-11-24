@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
 	*/
   SDL_Surface *temp, *temp2;
   SDL_Surface *bg;
-  Sprite *tile;
   Mix_Music* music;
   Fighter* f;
   Fighter* f2;
@@ -46,7 +45,6 @@ int main(int argc, char *argv[])
   /* SDL_FreeSurface(temp); */
   if(bg != NULL)
     SDL_BlitSurface(bg,NULL,buffer,NULL);
-  tile = LoadSprite("images/32_32_16_2sprite.png",32,32);
 	music = Mix_LoadMUS("sounds/Swamp.wav");
   /*
   if(tile != NULL)for(i = 0;i < 12;i++)
@@ -57,8 +55,10 @@ int main(int argc, char *argv[])
   done = 0;
   f = getFighter(0);
   f2 = getFighter(1);
-  InitCombatant(f);
-  InitCombatant2(f2);
+  InitCombatant(f, FIGHT_SENTINEL);
+  InitCombatant2(f2, FIGHT_DOOM);
+  LoadFighter(f,FIGHT_SENTINEL);
+  LoadFighter(f2,FIGHT_DOOM);
   PlayMusic(music);
   do
   {
@@ -91,11 +91,8 @@ int main(int argc, char *argv[])
 	FighterPull2(f2,keys);
 	FighterController1(f,f2,screen); /* Translates the key input into actions*/
 	FighterController(f,f2,screen);
-	DrawFighter1(f,FIGHT_STRIDER,screen);
-	DrawFighter1(f2,FIGHT_DOOM,screen);
-	/*
-	UpdateFighter(f,f2);
-	*/
+	DrawFighter1(f, screen);
+	DrawFighter2(f2, screen);
 	DrawHealthBar(f,screen,0,0);
 	DrawHealthBar(f2,screen,610,0);
 	/*
@@ -108,9 +105,9 @@ int main(int argc, char *argv[])
 	{
 		done = 1; /* Upon defeat the game exits */
 		if(f2->health <= 0)
-			fprintf(stdout,"Game Over: Strider Hiryu Wins\n");
+			fprintf(stdout,"Game Over: Player 1 Wins\n");
 		else
-			fprintf(stdout,"Game Over: Dr. Doom Wins\n");
+			fprintf(stdout,"Game Over: Player 2 Wins\n");
 		Mix_HaltMusic();
 	}
 	/*
