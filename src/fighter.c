@@ -967,27 +967,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			/* Light Attack: does the pulling, drawing, and logic for the attack */
 			int has_hit = 0;
 			has_hit = AABB(f1->hitbox,f2->hitbox);
-			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_STRIDER)
-			{
-				f2->health -= f1->light_dmg;
-				f2->stun_timer = 3;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_DOOM)
-			{
-				f2->health -= f1->light_dmg;
-				f2->stun_timer = 3;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MEGAMAN)
-			{
-				f2->health -= f1->light_dmg;
-				f2->stun_timer = 3;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MAGNETO)
-			{
-				f2->health -= f1->light_dmg;
-				f2->stun_timer = 3;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_SENTINEL)
+			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
 			{
 				f2->health -= f1->light_dmg;
 				f2->stun_timer = 3;
@@ -998,27 +978,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			/* Medium Attack: does the pulling, drawing, and logic for the attack */
 			int has_hit = 0;
 			has_hit = AABB(f1->hitbox,f2->hitbox);
-			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_STRIDER)
-			{
-				f2->health -= f1->med_dmg;
-				f2->stun_timer = 5;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_DOOM)
-			{
-				f2->health -= f1->med_dmg;
-				f2->stun_timer = 5;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MEGAMAN)
-			{
-				f2->health -= f1->med_dmg;
-				f2->stun_timer = 5;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MAGNETO)
-			{
-				f2->health -= f1->med_dmg;
-				f2->stun_timer = 5;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_SENTINEL)
+			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL)
 			{
 				f2->health -= f1->med_dmg;
 				f2->stun_timer = 5;
@@ -1029,27 +989,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			/* Heavy Attack: does the pulling, drawing, and logic for the attack */
 			int has_hit = 0;
 			has_hit = AABB(f1->hitbox,f2->hitbox);
-			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_STRIDER)
-			{
-				f2->health -= f1->hev_dmg;
-				f2->stun_timer = 7;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_DOOM)
-			{
-				f2->health -= f1->hev_dmg;
-				f2->stun_timer = 7;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MEGAMAN)
-			{
-				f2->health -= f1->hev_dmg;
-				f2->stun_timer = 7;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_MAGNETO)
-			{
-				f2->health -= f1->hev_dmg;
-				f2->stun_timer = 7;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK && f1->char_flag == FIGHT_SENTINEL)
+			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
 			{
 				f2->health -= f1->hev_dmg;
 				f2->stun_timer = 7;
@@ -1064,23 +1004,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			*/
 			int has_hit = 0;
 			has_hit = AABB(f1->hitbox,f2->hitbox);
-			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_STRIDER)
-			{
-				f2->health -= f1->launch_dmg;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_DOOM)
-			{
-				f2->health -= f1->launch_dmg;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MEGAMAN)
-			{
-				f2->health -= f1->launch_dmg;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_MAGNETO)
-			{
-				f2->health -= f1->launch_dmg;
-			}
-			else if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL && f1->char_flag == FIGHT_SENTINEL)
+			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL)
 			{
 				f2->health -= f1->launch_dmg;
 			}
@@ -1232,7 +1156,8 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 void FreeFighter(Fighter* f)
 {	
 	FreeSprite(f->sprite);
-	/* memset(f,0,sizeof(Fighter)); */
+	memset(f,0,sizeof(Fighter));
+	/*
 	f->sprite = NULL;
 	f->health = NULL;
 	f->x = NULL;
@@ -1248,6 +1173,7 @@ void FreeFighter(Fighter* f)
 	f->flags = NULL;
 	f->anim_flags = NULL;
 	f->f_jump = NULL;
+	*/
 }
 /* Cleans up the fighter list if it hasn't already been cleaned */
 void CloseFighter()
