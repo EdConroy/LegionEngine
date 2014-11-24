@@ -11,6 +11,9 @@
 
 #define FIGHT_STRIDER				0
 #define FIGHT_DOOM					1
+#define FIGHT_MAGNETO				2
+#define FIGHT_MEGAMAN				3
+#define FIGHT_SENTINEL				4
 /* 
 I should enumerate these but I got caught up in a Vin Diesel
 brutally murders a bunch of people in space movie to change it
@@ -85,12 +88,17 @@ typedef struct Fighter_T
 	long flags; /* This is your brain*/
 	long anim_flags; /* This is your brain on drugs*/
 	long f_jump; /* flag to determine the state in the air of the fighter */
-	long char_flag; /* Flag that indicates the player character*/ 
+	long char_flag; /* Flag that indicates the player character*/
+
+	int light_dmg;
+	int med_dmg;
+	int hev_dmg;
+	int launch_dmg;
 }Fighter;
 
 void InitFighterSprite(); /* Sets the default animation state for fighters */
-void InitCombatant(Fighter* f); /* Initializes the spawns and values for the fighter */
-void InitCombatant2(Fighter* f);
+void InitCombatant(Fighter* f, long character); /* Initializes the spawns and values for the fighter */
+void InitCombatant2(Fighter* f, long character);
 void InitFighterList(); /* Initializes the fighter list and populates it */
 
 Fighter * getFighter(int player);
@@ -101,7 +109,8 @@ void FighterPull2(Fighter* f2, Uint8* keys); /* Same as FighterPull except for p
 											 Fighter Pull in the future but for now it will have to suffice. 
 											 Not used in Demo */
 
-void DrawFighter1(Fighter* f1, long character, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull: Not used in Demo */
+void DrawFighter1(Fighter* f1, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull: Not used in Demo */
+void DrawFighter2(Fighter* f1, SDL_Surface* buffer);
 
 void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer);
 void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer);/* Does all three of the aforementioned methods
@@ -111,5 +120,7 @@ void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);/* Makes the h
 
 void FreeFighter(Fighter* f);/* Frees all of the current memory held by the fighter and sets it to null*/
 void CloseFighter();/* Frees all the fighters in the fighter list*/
+
+void LoadFighter(Fighter* f, long character);
 
 #endif
