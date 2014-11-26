@@ -926,7 +926,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 {
 	f1->f_jump = NULL;
-	if(f1->stun_timer <= 0) 
+	if(f1->stun_timer <= 0 && f1->shield_stun <= 0 && f1->health > 0) 
 	{
 		if(f1->flags == FIGHTERFLAG_WALKR)
 		{
@@ -963,8 +963,20 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			has_hit = AABB(f1->hitbox,f2->hitbox);
 			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
 			{
-				f2->health -= f1->light_dmg;
-				f2->stun_timer = 3;
+				if(f1->combo_count >= 10)
+				{
+					f2->health -= (f1->light_dmg * .4);
+				}
+				else
+				{
+					f2->health -= f1->light_dmg;
+					f2->stun_timer = 3;
+				}
+				++f1->combo_count;
+			}
+			else if(has_hit == 1 && f2->flags == FIGHTERFLAG_BLOCK)
+			{
+				f2->shield_stun = 1;
 			}
 		}
 		else if(f1->anim_flags == ANIMFLAG_MED && f1->flags != FIGHTERFLAG_JUMP)
@@ -974,8 +986,20 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			has_hit = AABB(f1->hitbox,f2->hitbox);
 			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL)
 			{
-				f2->health -= f1->med_dmg;
-				f2->stun_timer = 5;
+				if(f1->combo_count >= 10)
+				{
+					f2->health -= (f1->med_dmg * .4);
+				}
+				else
+				{
+					f2->health -= f1->med_dmg;
+					f2->stun_timer = 5;
+				}
+				++f1->combo_count;
+			}
+			else if(has_hit == 1 && f2->flags == FIGHTERFLAG_BLOCKL)
+			{
+				f2->shield_stun = 3;
 			}
 		}
 		else if(f1->anim_flags == ANIMFLAG_HEV && f1->flags != FIGHTERFLAG_JUMP)
@@ -985,8 +1009,20 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			has_hit = AABB(f1->hitbox,f2->hitbox);
 			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCK)
 			{
-				f2->health -= f1->hev_dmg;
-				f2->stun_timer = 7;
+				if(f1->combo_count >= 10)
+				{
+					f2->health -= (f1->hev_dmg * .4);
+				}
+				else
+				{
+					f2->health -= f1->hev_dmg;
+					f2->stun_timer = 7;
+				}
+				++f1->combo_count;
+			}
+			else if(has_hit == 1 && f2->flags == FIGHTERFLAG_BLOCK)
+			{
+				f2->shield_stun = 4;
 			}
 		}
 		else if(f1->anim_flags == ANIMFLAG_LAUNCH && f1->flags != FIGHTERFLAG_JUMP)
@@ -1001,6 +1037,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			if(has_hit == 1 && f2->flags != FIGHTERFLAG_BLOCKL)
 			{
 				f2->health -= f1->launch_dmg;
+				++f1->combo_count;
 			}
 		}	
 		if(f1->flags == FIGHTERFLAG_JUMP)
@@ -1037,16 +1074,22 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			f1->f_jump = NULL;
 		}
 	}
-	if(f1->stun_timer > 0)
+	if(f1->stun_timer > 0 && f1->health > 0)
 		--f1->stun_timer;
-	if(f1->stun_timer < 0)
+	if(f1->stun_timer < 0 && f1->health > 0)
 		f1->stun_timer = 0;
+	if(f1->shield_stun > 0 && f1->health > 0)
+		--f1->shield_stun;
+	if(f1->shield_stun < 0 && f1->health > 0)
+		f1->shield_stun = 0;
+	if(f2->stun_timer <= 0 && f2->health > 0)
+		f1->combo_count = 0;
 }
 /* Player 2's fighter controller that does all three tasks at the same time */
 void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 {
 	f2->f_jump = NULL;
-	if(f2->stun_timer <= 0)
+	if(f2->stun_timer <= 0 && f2->shield_stun <= 0 && f2->health > 0)
 	{
 		if(f2->flags == FIGHTERFLAG_WALKL && f2->flags != FIGHTERFLAG_JUMP)
 		{
@@ -1082,7 +1125,20 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			has_hit2 = AABB(f2->hitbox,f1->hitbox);
 			if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCK)
 			{
-				f1->health -= 15;
+				if(f2->combo_count >= 10)
+				{
+					f1->health -= (f2->light_dmg * .4);
+				}
+				else
+				{
+					f1->health -= f2->light_dmg;
+					f1->stun_timer = 3;
+				}
+				++f2->combo_count;
+			}
+			else if(has_hit2 == 1 && f1->flags == FIGHTERFLAG_BLOCK)
+			{
+				f1->shield_stun = 1;
 			}
 		}
 		else if(f2->anim_flags == ANIMFLAG_MED && f2->flags != FIGHTERFLAG_JUMP)
@@ -1092,7 +1148,20 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			has_hit2 = AABB(f2->hitbox,f1->hitbox);
 			if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
 			{
-				f1->health -= 25;
+				if(f2->combo_count >= 10)
+				{
+					f1->health -= (f2->med_dmg * .4);
+				}
+				else
+				{
+					f1->health -= f2->med_dmg;
+					f1->stun_timer = 5;
+				}
+				++f2->combo_count;
+			}
+			else if(has_hit2 == 1 && f1->flags == FIGHTERFLAG_BLOCK)
+			{
+				f1->shield_stun = 3;
 			}
 		}
 		else if(f2->anim_flags == ANIMFLAG_HEV && f2->flags != FIGHTERFLAG_JUMP)
@@ -1102,7 +1171,20 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			has_hit2 = AABB(f2->hitbox,f1->hitbox);
 			if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
 			{
-				f1->health -= 50;
+				if(f2->combo_count >= 10)
+				{
+					f1->health -= (f2->hev_dmg * .4);
+				}
+				else
+				{
+					f1->health -= f2->hev_dmg;
+					f1->stun_timer = 7;
+				}
+				++f2->combo_count;
+			}
+			else if(has_hit2 == 1 && f1->flags == FIGHTERFLAG_BLOCKL)
+			{
+				f1->shield_stun = 4;
 			}
 		}
 		else if(f2->anim_flags == ANIMFLAG_LAUNCH && f2->flags != FIGHTERFLAG_JUMP)
@@ -1116,7 +1198,7 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			has_hit2 = AABB(f2->hitbox,f1->hitbox);
 			if(has_hit2 == 1 && f1->flags != FIGHTERFLAG_BLOCKL)
 			{
-				f1->health -= 150;
+				f1->health -= f2->launch_dmg;
 			}
 		}
 		if(f2->flags == FIGHTERFLAG_JUMP)
@@ -1141,10 +1223,16 @@ void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 			f2->f_jump = NULL;
 		}
 	}
-	if(f2->stun_timer > 0)
+	if(f2->stun_timer > 0 && f2->health > 0)
 		--f2->stun_timer;
-	if(f2->stun_timer < 0)
+	if(f2->stun_timer < 0 && f2->health > 0)
 		f2->stun_timer = 0;
+	if(f2->shield_stun > 0 && f2->health > 0)
+		--f2->shield_stun;
+	if(f2->shield_stun < 0 && f2->health > 0)
+		f2->shield_stun = 0;
+	if(f1->stun_timer <= 0 && f1->health > 0)
+		f2->combo_count = 0;
 }
 /* Frees the memory that is held by the fighter */
 void FreeFighter(Fighter* f)
@@ -1233,42 +1321,87 @@ void LoadFighter(Fighter* f, long character)
 	}
 	fclose(pFile);
 }
-void EditFighter(Fighter* f)
+void EditFighter()
 {
 	unsigned int value = 0;
-	int editing = 0;
-	do
+
+	unsigned int health = 0;
+	unsigned int light = 0;
+	unsigned int medium = 0;
+	unsigned int heavy = 0;
+	unsigned int launcher = 0;
+
+	fprintf(stdout,"Do you want to edit a fighter?\n 1 = no\n 0 = yes\n");
+	scanf("%d",&value);
+	if(value == 1)
 	{
-		fprintf(stdout,"Do you want to edit a fighter?\n 1 = no\n 0 = yes\n");
-		scanf("%d",&value);
-		if(value == 1)
-		{
-			  editing = 1;
-		}
-		else
-		{
-			fprintf(stdout,"Health: \n");
-			scanf("%d",&value);
-			f->health = value;
-
-			fprintf(stdout,"Light: \n");
-			scanf("%d",&value);
-			f->light_dmg = value;
-
-			fprintf(stdout,"Medium: \n");
-			scanf("%d",&value);
-			f->med_dmg = value;
-
-			fprintf(stdout,"Heavy: \n");
-			scanf("%d",&value);
-			f->launch_dmg = value;
-
-			fprintf(stdout,"Launch: \n");
-			scanf("%d",&value);
-			f->launch_dmg = value;
-		}
-		fprintf(stdout,"Done!\n");
-		editing = 1;
+		  return;
 	}
-	while(editing = 0);
+	fprintf(stdout,"What fighter do you want to edit?:\n 1 - Strider\n 2 - Doom\n 3 - Magneto\n 4 - MegaMan\n 5 - Sentinel\n");
+	scanf("%d",&value);
+	char* filepath;
+	if(value == 1)
+	{
+		filepath = "fighters/StriderData.txt";
+	}
+	else if(value == 2)
+	{
+		filepath = "fighters/DoomData.txt";
+	}
+	else if(value == 3)
+	{
+		filepath = "fighters/MegaManData.txt";
+	}
+	else if(value == 4)
+	{
+		filepath = "fighters/MagnetoData.txt";
+	}
+	else if(value == 5)
+	{
+		filepath = "fighters/SentinelData.txt";
+	}
+	char buffer[255];
+	int current_line = 0;
+	FILE* pFile = NULL;
+	pFile = fopen(filepath,"w+");
+	if(!pFile)
+	{
+		fprintf(stdout,"character file not found: ",filepath);
+		return;
+	}
+	fprintf(stdout,"Health: \n");
+	scanf("%d",&health);
+
+	fprintf(stdout,"Light: \n");
+	scanf("%d",&light);
+
+	fprintf(stdout,"Medium: \n");
+	scanf("%d",&medium);
+
+	fprintf(stdout,"Heavy: \n");
+	scanf("%d",&heavy);
+
+	fprintf(stdout,"Launch: \n");
+	scanf("%d",&launcher);
+
+	fprintf(pFile,"health: %d",health);
+	fprintf(pFile,"\n");
+	fprintf(pFile,"light: %d",light);
+	fprintf(pFile,"\n");
+	fprintf(pFile,"medium: %d",medium);
+	fprintf(pFile,"\n");
+	fprintf(pFile,"heavy: %d",heavy);
+	fprintf(pFile,"\n");
+	fprintf(pFile,"launcher: %d",launcher);
+	fprintf(pFile,"\n");
+	fprintf(stdout,"Done!\n");
+
+	fclose(pFile);
+
+	/*int i;
+
+	for(i = 0; i < 100000;i++)
+	{
+		fprintf(pFile,"\n");
+	}*/
 }
