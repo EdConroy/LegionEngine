@@ -1,0 +1,5 @@
+health: 300
+light: 10
+medium: 19
+heavy: 44
+launcher: 150
