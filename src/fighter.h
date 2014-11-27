@@ -9,6 +9,8 @@
 
 #define MAX_FIGHTERS				2
 
+/* Indicates which fighter is currently being played by each player */
+
 #define FIGHT_STRIDER				0
 #define FIGHT_DOOM					1
 #define FIGHT_MAGNETO				2
@@ -17,8 +19,6 @@
 /* 
 I should enumerate these but I got caught up in a Vin Diesel
 brutally murders a bunch of people in space movie to change it
-then Keanu Reeves and Satan troll Gabriel really hard until God
-starts trolling Satan then Satan rage quits
 */
 #define FIGHTERFLAG_BLOCK			0
 #define FIGHTERFLAG_NOBLOCK			1
@@ -32,7 +32,7 @@ starts trolling Satan then Satan rage quits
 #define FIGHTERFLAG_BLOCKL			9
 #define FIGHTERFLAG_HITSTUN			10
 /*
-This would be a lot funnier if you read these in Charles Barkley's voice
+Indicates the current state of the player in the air
 */
 #define JUMPFLAG_MOVEL				0
 #define JUMPFLAG_MOVER				1
@@ -41,7 +41,7 @@ This would be a lot funnier if you read these in Charles Barkley's voice
 #define JUMPFLAG_HEV				4
 #define JUMPFLAG_LAUNCH				5
 /*
-Shoutouts to the AniManiacs for the idea for the naming convention here
+States used for drawing the player character
 */
 #define ANIMFLAG_BLOCK				0
 #define ANIMFLAG_NOBLOCK			1
@@ -95,6 +95,8 @@ typedef struct Fighter_T
 	int med_dmg;
 	int hev_dmg;
 	int launch_dmg;
+
+	int frame;
 }Fighter;
 
 void InitFighterSprite(); /* Sets the default animation state for fighters */
@@ -106,23 +108,19 @@ Fighter * getFighter(int player);
 
 void FighterPull(Fighter* f1, Uint8* keys); /* Gets the inputs from the user and sets flags based on those
 														 inputs */
-void FighterPull2(Fighter* f2, Uint8* keys); /* Same as FighterPull except for player 2, will be abstacted with 
-											 Fighter Pull in the future but for now it will have to suffice. 
-											 Not used in Demo */
+void FighterPull2(Fighter* f2, Uint8* keys);
 
-void DrawFighter1(Fighter* f1, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull: Not used in Demo */
+void DrawFighter1(Fighter* f1, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull */
 void DrawFighter2(Fighter* f1, SDL_Surface* buffer);
 
 void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer);
-void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer);/* Does all three of the aforementioned methods
-																				   really ineffiecent but functional.  Also a nightmare
-																				   to make sense of if you didn't work on it */
+void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer);/* Updates the Fighter logic */
 void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);/* Makes the health bar for both green and red health*/
 
 void FreeFighter(Fighter* f);/* Frees all of the current memory held by the fighter and sets it to null*/
 void CloseFighter();/* Frees all the fighters in the fighter list*/
 
-void LoadFighter(Fighter* f, long character);
-void EditFighter(Fighter* f);
+void LoadFighter(Fighter* f, long character); /* Loads Fighter data from a .txt file*/
+void EditFighter(); /* Edits the data of the Fighter*/
 
 #endif
