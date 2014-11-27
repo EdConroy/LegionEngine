@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
   int done;
   int keyn;
   int current_stage = 0;
+  int editing = 0;
   /*
   int i;
   int mx,my;
@@ -55,6 +56,16 @@ int main(int argc, char *argv[])
   done = 0;
   f = getFighter(0);
   f2 = getFighter(1);
+  do
+  {
+	EditFighter();
+	printf("Do you want to edit another fighter?\n 0 - Yes\n 1 - No\n");
+	scanf("%d",&editing);
+	if(editing != 0)
+	{
+		editing = 1;
+	}
+  }while(editing = 0);
   InitCombatant(f, FIGHT_SENTINEL);
   InitCombatant2(f2, FIGHT_DOOM);
   LoadFighter(f,FIGHT_SENTINEL);
@@ -103,7 +114,7 @@ int main(int argc, char *argv[])
 	*/
 	if(f->health <= 0 || f2->health <= 0)
 	{
-		done = 1; /* Upon defeat the game exits */
+		//done = 1; /* Upon defeat the game exits */
 		if(f2->health <= 0)
 			fprintf(stdout,"Game Over: Player 1 Wins\n");
 		else
