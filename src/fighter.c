@@ -1333,7 +1333,7 @@ void EditFighter()
 
 	fprintf(stdout,"Do you want to edit a fighter?\n 1 = no\n 0 = yes\n");
 	scanf("%d",&value);
-	if(value == 1)
+	if(value != 0)
 	{
 		  return;
 	}
@@ -1359,6 +1359,10 @@ void EditFighter()
 	else if(value == 5)
 	{
 		filepath = "fighters/SentinelData.txt";
+	}
+	else
+	{
+		printf("Invalid Selection");
 	}
 	char buffer[255];
 	int current_line = 0;
