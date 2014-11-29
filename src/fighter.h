@@ -99,7 +99,6 @@ typedef struct Fighter_T
 	int frame;
 }Fighter;
 
-void InitFighterSprite(); /* Sets the default animation state for fighters */
 void InitCombatant(Fighter* f, long character); /* Initializes the spawns and values for the fighter */
 void InitCombatant2(Fighter* f, long character);
 void InitFighterList(); /* Initializes the fighter list and populates it */
@@ -114,13 +113,13 @@ void DrawFighter1(Fighter* f1, SDL_Surface* buffer); /* Draws the fighter based 
 void DrawFighter2(Fighter* f1, SDL_Surface* buffer);
 
 void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer);
-void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer);/* Updates the Fighter logic */
+void FighterController2(Fighter* f1, Fighter* f2, SDL_Surface *buffer);/* Updates the Fighter logic */
 void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);/* Makes the health bar for both green and red health*/
 
 void FreeFighter(Fighter* f);/* Frees all of the current memory held by the fighter and sets it to null*/
 void CloseFighter();/* Frees all the fighters in the fighter list*/
 
 void LoadFighter(Fighter* f, long character); /* Loads Fighter data from a .txt file*/
-void EditFighter(); /* Edits the data of the Fighter*/
+int EditFighter(); /* Edits the current data of the Fighter, only a temporary edit*/
 
 #endif
