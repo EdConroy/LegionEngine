@@ -1,5 +1,4 @@
 #include <stdlib.h>
-//#include <time.h>
 #include "glib.h"
 #include "SDL.h"
 #include "SDL_image.h"
@@ -19,11 +18,6 @@ void Init_All();
 /*notice the default arguments for main.  SDL expects main to look like that, so don't change it*/
 int main(int argc, char *argv[])
 {
-	/*
-	time_t time;
-	long cur;
-	localtime(&time);
-	*/
   SDL_Surface *temp, *temp2;
   SDL_Surface *bg;
   Mix_Music* music;
@@ -58,9 +52,12 @@ int main(int argc, char *argv[])
   f2 = getFighter(1);
   do
   {
-	EditFighter();
-	printf("Do you want to edit another fighter?\n 0 - Yes\n 1 - No\n");
-	scanf("%d",&editing);
+	editing = EditFighter();
+	if(editing == 0)
+	{
+		printf("Do you want to edit another fighter?\n 0 - Yes\n 1 - No\n");
+		scanf("%d",&editing);
+	}
 	if(editing != 0)
 	{
 		editing = 1;
@@ -101,7 +98,7 @@ int main(int argc, char *argv[])
 	FighterPull(f, keys); /* Gets the key input from the user */
 	FighterPull2(f2,keys);
 	FighterController1(f,f2,screen); /* Translates the key input into actions*/
-	FighterController(f,f2,screen);
+	FighterController2(f,f2,screen);
 	DrawFighter1(f, screen);
 	DrawFighter2(f2, screen);
 	DrawHealthBar(f,screen,0,0);
@@ -169,7 +166,6 @@ void Init_All()
   Init_Graphics();
   InitMusic();
   InitFighterList();
-  InitFighterSprite();
   /* InitMouse(); */
   atexit(CleanUpAll);
 }
