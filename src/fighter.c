@@ -74,7 +74,7 @@ void FighterPull(Fighter* f1, Uint8* keys)
 	{
 		f1->f_jump = JUMPFLAG_MOVEL;
 	}
-	if(keys[SDLK_RIGHT] && f1->flags != FIGHTERFLAG_JUMP)
+	else if(keys[SDLK_RIGHT] && f1->flags != FIGHTERFLAG_JUMP)
 	{
 		f1->flags = FIGHTERFLAG_WALKR;
 		f1->anim_flags = ANIMFLAG_WALKR;
