@@ -3,12 +3,6 @@
 
 Fighter Fighters[MAX_FIGHTERS];
 
-
-struct 
-{
-	int frame;
-	int player2_frame;
-}F_Sprite;
 /* Initializes the fighter list that holds both of the player characters */
 void InitFighterList()
 {
@@ -23,12 +17,6 @@ Fighter * getFighter(int player)
 {
 	if (player >= MAX_FIGHTERS)return NULL;
 	return &Fighters[player];
-}
-/* Defaults the fighter sprite to have no animations */
-void InitFighterSprite()
-{
-	F_Sprite.frame = 0;
-	F_Sprite.player2_frame = 0;
 }
 /* Sets the first player's data */
 void InitCombatant(Fighter* f, long character)
@@ -1086,7 +1074,7 @@ void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 		f1->combo_count = 0;
 }
 /* Player 2's fighter controller that does all three tasks at the same time */
-void FighterController(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
+void FighterController2(Fighter* f1, Fighter* f2, SDL_Surface *buffer)
 {
 	f2->f_jump = NULL;
 	if(f2->stun_timer <= 0 && f2->shield_stun <= 0 && f2->health > 0)
@@ -1245,7 +1233,7 @@ void CloseFighter()
 {
 	for(int i = 0; i < MAX_FIGHTERS; ++i)
 	{
-		//FreeFighter(&Fighters[i]);
+		/* FreeFighter(&Fighters[i]); */
 	}
 }
 /* Draws the current health of the fighter */
@@ -1283,7 +1271,6 @@ void LoadFighter(Fighter* f, long character)
 		filepath = "fighters/SentinelData.txt";
 	}
 	char buffer[255];
-	int current_line = 0;
 	FILE* pFile = NULL;
 	pFile = fopen(filepath,"r");
 	if(!pFile)
@@ -1321,7 +1308,7 @@ void LoadFighter(Fighter* f, long character)
 	}
 	fclose(pFile);
 }
-void EditFighter()
+int EditFighter()
 {
 	unsigned int value = 0;
 
@@ -1335,7 +1322,7 @@ void EditFighter()
 	scanf("%d",&value);
 	if(value != 0)
 	{
-		  return;
+		  return 1;
 	}
 	fprintf(stdout,"What fighter do you want to edit?:\n 1 - Strider\n 2 - Doom\n 3 - Magneto\n 4 - MegaMan\n 5 - Sentinel\n");
 	scanf("%d",&value);
@@ -1364,14 +1351,12 @@ void EditFighter()
 	{
 		printf("Invalid Selection");
 	}
-	char buffer[255];
-	int current_line = 0;
 	FILE* pFile = NULL;
 	pFile = fopen(filepath,"w+");
 	if(!pFile)
 	{
 		fprintf(stdout,"character file not found: ",filepath);
-		return;
+		return 1;
 	}
 	fprintf(stdout,"Health: \n");
 	scanf("%d",&health);
@@ -1401,6 +1386,8 @@ void EditFighter()
 	fprintf(stdout,"Done!\n");
 
 	fclose(pFile);
+
+	return 0;
 
 	/*int i;
 
