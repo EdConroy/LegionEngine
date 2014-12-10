@@ -112,8 +112,7 @@ void FighterPull2(Fighter* f2, Uint8* keys);
 void DrawFighter1(Fighter* f1, SDL_Surface* buffer); /* Draws the fighter based on the flags set by FighterPull */
 void DrawFighter2(Fighter* f1, SDL_Surface* buffer);
 
-void FighterController1(Fighter* f1, Fighter* f2, SDL_Surface *buffer);
-void FighterController2(Fighter* f1, Fighter* f2, SDL_Surface *buffer);/* Updates the Fighter logic */
+void FighterController(Fighter* f1, Fighter* f2, int player_number); /* Updates the Fighter logic */
 void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);/* Makes the health bar for both green and red health*/
 
 void FreeFighter(Fighter* f);/* Frees all of the current memory held by the fighter and sets it to null*/
