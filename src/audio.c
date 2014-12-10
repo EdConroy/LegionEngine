@@ -21,7 +21,8 @@ int LoadMusic(Mix_Music* music)
 	{
 		return 0;
 	}
-	light = Mix_LoadWAV( "scratch.wav" ); /* Add Sound effects here */
+	/*
+	light = Mix_LoadWAV( "scratch.wav" );
     medium = Mix_LoadWAV( "high.wav" ); 
     heavy = Mix_LoadWAV( "medium.wav" ); 
     launcher = Mix_LoadWAV( "low.wav" );
@@ -32,6 +33,7 @@ int LoadMusic(Mix_Music* music)
     {
         return 0;    
     }
+	*/
 	return 1;
 }
 void PlayMusic(Mix_Music* music)
