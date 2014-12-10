@@ -22,24 +22,24 @@ int LoadMusic(Mix_Music* music)
 		return 0;
 	}
 	/*
-	light = Mix_LoadWAV( "scratch.wav" );
-    medium = Mix_LoadWAV( "high.wav" ); 
-    heavy = Mix_LoadWAV( "medium.wav" ); 
-    launcher = Mix_LoadWAV( "low.wav" );
-    victory = Mix_LoadWAV( "low.wav" );
+	light = Mix_LoadWAV( );
+    	medium = Mix_LoadWAV( ); 
+    	heavy = Mix_LoadWAV( ); 
+    	launcher = Mix_LoadWAV( );
+    	victory = Mix_LoadWAV( );
 
-    //If there was a problem loading the sound effects
-    if(light == NULL || medium == NULL || heavy == NULL || launcher == NULL || victory == NULL)
-    {
-        return 0;    
-    }
+    	//If there was a problem loading the sound effects
+    	if(light == NULL || medium == NULL || heavy == NULL || launcher == NULL || victory == NULL)
+    	{
+        	return 0;    
+    	}
 	*/
 	return 1;
 }
 void PlayMusic(Mix_Music* music)
 {
         //Play the music
-			Mix_PlayMusic( music, -1 );
+	Mix_PlayMusic( music, -1 );
 }
 int PlayEffect(int state, int character)
 {
