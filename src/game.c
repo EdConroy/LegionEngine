@@ -97,8 +97,8 @@ int main(int argc, char *argv[])
 	}
 	FighterPull(f, keys); /* Gets the key input from the user */
 	FighterPull2(f2,keys);
-	FighterController1(f,f2,screen); /* Translates the key input into actions*/
-	FighterController2(f,f2,screen);
+	FighterController(f,f2,1); /* Translates the key input into actions*/
+	FighterController(f2,f,2);
 	DrawFighter1(f, screen);
 	DrawFighter2(f2, screen);
 	DrawHealthBar(f,screen,0,0);
