@@ -1,5 +1,6 @@
 #include "collision.h"
 #include "fighter.h"
+#include "time.h"
 
 Fighter Fighters[MAX_FIGHTERS];
 
@@ -201,7 +202,32 @@ void FighterPull2(Fighter* f2, Uint8* keys)
 void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 {
 	int frame_count;
-	if(f1->anim_flags == ANIMFLAG_HITSTUN)
+	if(f1->health <= 0)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderDeath.png",164,92);
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomDeath.png",196,150);
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoDeath.png",162,140);
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelDeath.png",234,184);
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManDeath.png",126,76);
+		}
+		frame_count = 1;
+	}
+	else if(f1->anim_flags == ANIMFLAG_HITSTUN)
 	{
 		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
@@ -556,7 +582,32 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 {
 	int frame_count2;
-	if(f1->anim_flags == ANIMFLAG_HITSTUN)
+		if(f1->health <= 0)
+	{
+		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		if(f1->char_flag == FIGHT_STRIDER)
+		{
+			f1->sprite = LoadSprite("images/StriderDeath.png",164,92);
+		}
+		else if(f1->char_flag == FIGHT_DOOM)
+		{
+			f1->sprite = LoadSprite("images/DoomDeath.png",196,150);
+		}
+		else if(f1->char_flag == FIGHT_MAGNETO)
+		{
+			f1->sprite = LoadSprite("images/MagnetoDeath.png",162,140);
+		}
+		else if(f1->char_flag == FIGHT_SENTINEL)
+		{
+			f1->sprite = LoadSprite("images/SentinelDeath.png",234,184);
+		}
+		else if(f1->char_flag == FIGHT_MEGAMAN)
+		{
+			f1->sprite = LoadSprite("images/MegaManDeath.png",126,76);
+		}
+		frame_count2 = 1;
+	}
+	else if(f1->anim_flags == ANIMFLAG_HITSTUN)
 	{
 		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
@@ -911,6 +962,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 /* Updates the logic for each fighter */
 void FighterController(Fighter* f1, Fighter* f2, int player_number)
 {
+	clock_t t;
 	f1->f_jump = NULL;
 	if(f1->stun_timer <= 0 && f1->shield_stun <= 0 && f1->health > 0) 
 	{
@@ -986,6 +1038,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->stun_timer = 3;
 				}
 				++f1->combo_count;
+				t = clock();
 			}
 			else if(has_hit == 1 && f2->flags == FIGHTERFLAG_BLOCK)
 			{
@@ -1009,6 +1062,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->stun_timer = 5;
 				}
 				++f1->combo_count;
+				t = clock();
 			}
 			else if(has_hit == 1 && f2->flags == FIGHTERFLAG_BLOCKL)
 			{
@@ -1032,6 +1086,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->stun_timer = 7;
 				}
 				++f1->combo_count;
+				t = clock();
 			}
 			else if(has_hit == 1 && f2->flags == FIGHTERFLAG_BLOCK)
 			{
@@ -1051,6 +1106,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 			{
 				f2->health -= f1->launch_dmg;
 				++f1->combo_count;
+				t = clock();
 			}
 		}	
 		if(f1->flags == FIGHTERFLAG_JUMP)
@@ -1087,6 +1143,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 			f1->f_jump = NULL;
 		}
 	}
+	t = clock() - t;
 	if(f1->stun_timer > 0 && f1->health > 0)
 		--f1->stun_timer;
 	if(f1->stun_timer < 0 && f1->health > 0)
@@ -1095,7 +1152,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 		--f1->shield_stun;
 	if(f1->shield_stun < 0 && f1->health > 0)
 		f1->shield_stun = 0;
-	if(f2->stun_timer <= 0 && f2->health > 0)
+	if(f2->stun_timer <= 0 && f2->health > 0 && ((float)t/CLOCKS_PER_SEC) == 2.0)
 		f1->combo_count = 0;
 }
 /* Frees the memory that is held by the fighter */
