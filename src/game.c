@@ -28,26 +28,16 @@ int main(int argc, char *argv[])
   int current_stage = 0;
   int editing = 0;
   Sprite* v_screen;
-  /*
-  int i;
-  int mx,my;
-  */
+
   Uint8 *keys;
   Init_All();
   temp2 = IMG_Load("images/MvCStage2.png");/* second stage */
   temp = IMG_Load("images/MvCStage.png");/*notice that the path is part of the filename*/
   if(temp != NULL)						/*ALWAYS check your pointers before you use them*/
     bg = SDL_DisplayFormat(temp);
-  /* SDL_FreeSurface(temp); */
   if(bg != NULL)
     SDL_BlitSurface(bg,NULL,buffer,NULL);
 	music = Mix_LoadMUS("sounds/Swamp.wav");
-  /*
-  if(tile != NULL)for(i = 0;i < 12;i++)
-  {
-    DrawSprite(tile,buffer,i * tile->w,0,0);
-  }
-  */
   done = 0;
   f = getFighter(0);
   f2 = getFighter(1);
@@ -143,7 +133,6 @@ int main(int argc, char *argv[])
 			v_screen = LoadSprite("images/MegaManVictory.png",500,500);
 		DrawSprite(v_screen,screen,250,250,0);
 	}
-    /* DrawMouse(); */
 	NextFrame();
 
     if(keys[SDLK_ESCAPE])done = 1;
@@ -161,7 +150,6 @@ int main(int argc, char *argv[])
 void CleanUpAll()
 {
   CloseSprites();
-  /* CloseFighter(); */
   /*any other cleanup functions can be added here*/ 
 }
 
@@ -170,6 +158,5 @@ void Init_All()
   Init_Graphics();
   InitMusic();
   InitFighterList();
-  /* InitMouse(); */
   atexit(CleanUpAll);
 }
