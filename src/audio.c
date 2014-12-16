@@ -1,12 +1,5 @@
 #include "audio.h"
 
-Mix_Chunk* light;
-Mix_Chunk* medium;
-Mix_Chunk* heavy;
-Mix_Chunk* launcher;
-Mix_Chunk* victory;
-
-
 void InitMusic()
 {
 	if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1 )
@@ -21,67 +14,36 @@ int LoadMusic(Mix_Music* music)
 	{
 		return 0;
 	}
-	/*
-	light = Mix_LoadWAV( );
-    	medium = Mix_LoadWAV( ); 
-    	heavy = Mix_LoadWAV( ); 
-    	launcher = Mix_LoadWAV( );
-    	victory = Mix_LoadWAV( );
+	return 1;
+}
+int LoadSFX(Mix_Music* victory, int character)
+{
+	if(character == FIGHT_STRIDER)
+		victory = Mix_LoadMUS("sounds/StriderVictory.wav");
+	else if(character == FIGHT_DOOM)
+		victory = Mix_LoadMUS("sounds/DoomVictory.wav");
+	else if(character == FIGHT_MAGNETO)
+		victory = Mix_LoadMUS("sounds/MagnetoVictory.wav");
+	else if(character == FIGHT_MEGAMAN)
+		victory = Mix_LoadMUS("sounds/MegaManVictory.wav");
+	else if(character == FIGHT_SENTINEL)
+		victory = Mix_LoadMUS("sounds/SentinelVictory.wav");
 
-    	//If there was a problem loading the sound effects
-    	if(light == NULL || medium == NULL || heavy == NULL || launcher == NULL || victory == NULL)
-    	{
-        	return 0;    
-    	}
-	*/
+    //If there was a problem loading the sound effects
+    if(victory == NULL)
+    {
+        return 0;    
+    }
 	return 1;
 }
 void PlayMusic(Mix_Music* music)
 {
-        //Play the music
+    //Play the music
 	Mix_PlayMusic( music, -1 );
 }
-int PlayEffect(int state, int character)
+void PlayEffect(Mix_Music* effect)
 {
-    if(state == 1)
-    {
-        //Play the scratch effect
-        if( Mix_PlayChannel( -1, light, 0 ) == -1 )
-        {
-            return 1;    
-        }
-    }
-    else if(state == 2)
-    {
-        //Play the high hit effect
-        if( Mix_PlayChannel( -1, medium, 0 ) == -1 )
-        {
-            return 1;    
-        }
-    }
-    else if(state == 3)
-    {
-        //Play the medium hit effect
-        if( Mix_PlayChannel( -1, heavy, 0 ) == -1 )
-        {
-            return 1;    
-        }
-    }
-    else if(state == 4)
-    {
-        if( Mix_PlayChannel( -1, launcher, 0 ) == -1 )
-        {
-            return 1;    
-        }
-    }
-	else if(state == 5)
-	{
-		if( Mix_PlayChannel( -1, victory, 0) == -1)
-		{
-			return 1;
-		}
-	}
-	return 0;
+	Mix_PlayMusic(effect,1);
 }
 void FreeMusic(Mix_Music* music)
 {
