@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     bg = SDL_DisplayFormat(temp);
   if(bg != NULL)
     SDL_BlitSurface(bg,NULL,buffer,NULL);
-	music = Mix_LoadMUS("sounds/Swamp.wav");
+	music = Mix_LoadMUS("sounds/Clocktower.wav");
   done = 0;
   f = getFighter(0);
   f2 = getFighter(1);
@@ -96,13 +96,8 @@ int main(int argc, char *argv[])
 	DrawFighter2(f2, screen);
 	DrawHealthBar(f,screen,0,0);
 	DrawHealthBar(f2,screen,610,0);
-
 	if(f2->health <= 0)
 	{
-		if(v_screen != NULL)
-		{
-			FreeSprite(v_screen);
-		}
 		if(f->char_flag == FIGHT_STRIDER)
 			v_screen = LoadSprite("images/StriderVictory.png",500,500);
 		else if(f->char_flag == FIGHT_DOOM)
@@ -117,10 +112,6 @@ int main(int argc, char *argv[])
 	}
 	else if(f->health <= 0)
 	{
-		if(v_screen != NULL)
-		{
-			FreeSprite(v_screen);
-		}
 		if(f2->char_flag == FIGHT_STRIDER)
 			v_screen = LoadSprite("images/StriderVictory.png",500,500);
 		else if(f2->char_flag == FIGHT_DOOM)
