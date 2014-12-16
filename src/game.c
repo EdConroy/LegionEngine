@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
   int keyn;
   int current_stage = 0;
   int editing = 0;
+  Sprite* v_screen;
   /*
   int i;
   int mx,my;
@@ -50,6 +51,7 @@ int main(int argc, char *argv[])
   done = 0;
   f = getFighter(0);
   f2 = getFighter(1);
+
   do
   {
 	editing = EditFighter();
@@ -63,6 +65,7 @@ int main(int argc, char *argv[])
 		editing = 1;
 	}
   }while(editing = 0);
+
   InitCombatant(f, FIGHT_SENTINEL);
   InitCombatant2(f2, FIGHT_DOOM);
   LoadFighter(f,FIGHT_SENTINEL);
@@ -103,43 +106,43 @@ int main(int argc, char *argv[])
 	DrawFighter2(f2, screen);
 	DrawHealthBar(f,screen,0,0);
 	DrawHealthBar(f2,screen,610,0);
-	/*
-    if(SDL_GetMouseState(&mx,&my))
-    {
-      DrawSprite(tile,buffer,(mx /32) * 32,(my /32) * 32,0); 
-    }
-	*/
-	if(f->health <= 0 || f2->health <= 0)
-	{
-		//done = 1; /* Upon defeat the game exits */
-		if(f2->health <= 0)
-			fprintf(stdout,"Game Over: Player 1 Wins\n");
-		else
-			fprintf(stdout,"Game Over: Player 2 Wins\n");
-		Mix_HaltMusic();
-	}
-	/*
-	if(f->health <= 0)
+
+	if(f2->health <= 0)
 	{
 		if(v_screen != NULL)
 		{
 			FreeSprite(v_screen);
 		}
-		v_screen = LoadSprite("images/StriderVictory.png",1024,768);
-		DrawSprite(v_screen,victory,500,500,0);
-		done = 1;
+		if(f->char_flag == FIGHT_STRIDER)
+			v_screen = LoadSprite("images/StriderVictory.png",500,500);
+		else if(f->char_flag == FIGHT_DOOM)
+			v_screen = LoadSprite("images/DoomVictory.png",500,500);
+		else if(f->char_flag == FIGHT_MAGNETO)
+			v_screen = LoadSprite("images/MagnetoVictory.png",500,500);
+		else if(f->char_flag == FIGHT_SENTINEL)
+			v_screen = LoadSprite("images/SentinelVictory.png",500,500);
+		else if(f->char_flag == FIGHT_MEGAMAN)
+			v_screen = LoadSprite("images/MegaManVictory.png",500,500);
+		DrawSprite(v_screen,screen,250,250,0);
 	}
-	else if(f2->health <= 0)
+	else if(f->health <= 0)
 	{
 		if(v_screen != NULL)
 		{
 			FreeSprite(v_screen);
 		}
-		v_screen = LoadSprite("images/DoomVictory.png",1024,768);
-			DrawSprite(v_screen,victory,500,500,0);
-		done = 1;
+		if(f2->char_flag == FIGHT_STRIDER)
+			v_screen = LoadSprite("images/StriderVictory.png",500,500);
+		else if(f2->char_flag == FIGHT_DOOM)
+			v_screen = LoadSprite("images/DoomVictory.png",500,500);
+		else if(f2->char_flag == FIGHT_MAGNETO)
+			v_screen = LoadSprite("images/MagnetoVictory.png",500,500);
+		else if(f2->char_flag == FIGHT_SENTINEL)
+			v_screen = LoadSprite("images/SentinelVictory.png",500,500);
+		else if(f2->char_flag == FIGHT_MEGAMAN)
+			v_screen = LoadSprite("images/MegaManVictory.png",500,500);
+		DrawSprite(v_screen,screen,250,250,0);
 	}
-	*/
     /* DrawMouse(); */
 	NextFrame();
 
@@ -148,6 +151,7 @@ int main(int argc, char *argv[])
   SDL_FreeSurface(temp); /* Frees the two background images from memory*/
   SDL_FreeSurface(temp2);
   FreeMusic(music);
+  FreeSprite(v_screen);
   exit(0); /*technically this will end the program, but the compiler likes all functions that can return a value TO return a value*/
   FreeFighter(f); /* Clean up any used data by the fighters*/
   FreeFighter(f2);
