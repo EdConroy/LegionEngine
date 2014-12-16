@@ -1,3 +1,7 @@
+/*
+Special Thanks to Bo Thompson for letting me use this code
+*/
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
