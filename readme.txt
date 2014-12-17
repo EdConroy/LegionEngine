@@ -4,7 +4,7 @@ The Characters, Stages, and Music are all owned by Capcom and Marvel respectivel
 issues so the only thing that is made available is the source code.
 
 Controls:
-Dr. Doom
+Player 2
 WASD - Movement
 r - jab
 t - medium
@@ -12,7 +12,7 @@ y - heavy
 g - launcher
 f - block
 
-Strider Hiryu
+Player 1
 Arrows - Movement
 j - light
 k - medium
@@ -31,3 +31,7 @@ just fine.
 Update 10/25: Press O and P to change stages
 
 Update 10/26: Added background music, audio.c, and audio.h. 
+
+Update 12/16: Switch FIGHT_SENTINEL and FIGHT_DOOM in LoadFighter in game.c to change fighters.  Also change the music path to
+any sound file in the sounds folder in order to change the music.  You must not be in fullscreen mode to use the Fighter Editor
+since it uses the command line.  Have Fun!
