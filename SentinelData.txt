@@ -3,3 +3,6 @@ light: 18
 medium: 23
 heavy: 48
 launcher: 150
+lightknockback: 2
+mediumknockback: 4
+heavyknockback: 4
