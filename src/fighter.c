@@ -1037,6 +1037,16 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->health -= f1->light_dmg;
 					f2->stun_timer = 3;
 				}
+				if(f1->x < f2->x)
+				{
+					f2->x += f1->light_knb;
+					f2->hitbox.x += f1->light_knb;
+				}
+				else
+				{
+					f2->x -= f1->light_knb;
+					f2->hitbox.x -= f1->light_knb;
+				}
 				++f1->combo_count;
 				t = clock();
 			}
@@ -1061,6 +1071,16 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->health -= f1->med_dmg;
 					f2->stun_timer = 5;
 				}
+				if(f1->x < f2->x)
+				{
+					f2->x += f1->med_knb;
+					f2->hitbox.x += f1->med_knb;
+				}
+				else
+				{
+					f2->x -= f1->med_knb;
+					f2->hitbox.x -= f1->med_knb;
+				}
 				++f1->combo_count;
 				t = clock();
 			}
@@ -1084,6 +1104,16 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 				{
 					f2->health -= f1->hev_dmg;
 					f2->stun_timer = 7;
+				}
+				if(f1->x < f2->x)
+				{
+					f2->x += f1->hev_knb;
+					f2->hitbox.x += f1->hev_knb;
+				}
+				else
+				{
+					f2->x -= f1->hev_knb;
+					f2->hitbox.x -= f1->hev_knb;
 				}
 				++f1->combo_count;
 				t = clock();
@@ -1239,6 +1269,21 @@ void LoadFighter(Fighter* f, long character)
 			fscanf(pFile,"%i",&f->launch_dmg);
 			fscanf(pFile,"%s",buffer);
 		}
+		if(strcmp(buffer,"lightknockback:")==0)
+		{
+			fscanf(pFile,"%i",&f->light_knb);
+			fscanf(pFile,"%s",buffer);
+		}
+		if(strcmp(buffer,"mediumknockback:")==0)
+		{
+			fscanf(pFile,"%i",&f->med_knb);
+			fscanf(pFile,"%s",buffer);
+		}
+		if(strcmp(buffer,"heavyknockback:")==0)
+		{
+			fscanf(pFile,"%i",&f->hev_knb);
+			fscanf(pFile,"%s",buffer);
+		}
 	}
 	fclose(pFile);
 }
@@ -1252,6 +1297,9 @@ int EditFighter()
 	unsigned int medium = 0;
 	unsigned int heavy = 0;
 	unsigned int launcher = 0;
+	unsigned int light_knb = 0;
+	unsigned int med_knb = 0;
+	unsigned int hev_knb = 0;
 
 	fprintf(stdout,"Do you want to edit a fighter?\n 1 = no\n 0 = yes\n");
 	scanf("%d",&value);
@@ -1308,6 +1356,15 @@ int EditFighter()
 	fprintf(stdout,"Launch: \n");
 	scanf("%d",&launcher);
 
+	fprintf(stdout,"Light Knockback: \n");
+	scanf("%d",&light_knb);
+
+	fprintf(stdout,"Medium Knockback: \n");
+	scanf("%d",&med_knb);
+
+	fprintf(stdout,"Heavy Knockback: \n");
+	scanf("%d",&hev_knb);
+
 	fprintf(pFile,"health: %d",health);
 	fprintf(pFile,"\n");
 	fprintf(pFile,"light: %d",light);
@@ -1317,6 +1374,12 @@ int EditFighter()
 	fprintf(pFile,"heavy: %d",heavy);
 	fprintf(pFile,"\n");
 	fprintf(pFile,"launcher: %d",launcher);
+	fprintf(pFile,"\n");
+	fprintf(pFile,"lightknockback: %d",launcher);
+	fprintf(pFile,"\n");
+	fprintf(pFile,"mediumknockback: %d",launcher);
+	fprintf(pFile,"\n");
+	fprintf(pFile,"heavyknockback: %d",launcher);
 	fprintf(pFile,"\n");
 	fprintf(stdout,"Done!\n");
 
