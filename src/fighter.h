@@ -2,6 +2,7 @@
 #define _FIGHTER_
 
 #include "graphics.h"
+#include "time.h"
 
 #define IS_SET(a,b)				(a & b)
 #define SET_FLAG(a,b)			(a |= b)
@@ -91,16 +92,18 @@ typedef struct Fighter_T
 	long f_jump; /* flag to determine the state in the air of the fighter */
 	long char_flag; /* Flag that indicates the player character*/
 
-	int light_dmg;
+	int light_dmg; /* Determines the damage each move does*/
 	int med_dmg;
 	int hev_dmg;
 	int launch_dmg;
 
-	int frame;
+	int frame; /* The current frame of animation the Fighter is in */
 
-	int light_knb;
+	int light_knb; /* Determines the ammount of knockback that is applied to the enemy */
 	int med_knb;
 	int hev_knb;
+
+	clock_t t;
 }Fighter;
 
 void InitCombatant(Fighter* f, long character); /* Initializes the spawns and values for the fighter */
