@@ -1,6 +1,5 @@
 #include "collision.h"
 #include "fighter.h"
-#include "time.h"
 
 Fighter Fighters[MAX_FIGHTERS];
 
@@ -37,6 +36,7 @@ void InitCombatant(Fighter* f, long character)
 	f->f_jump = 0;
 	f->char_flag = character;
 	f->stun_timer = 0;
+	f->t = clock();
 }
 /* Sets the second player's data */
 void InitCombatant2(Fighter* f, long character)
@@ -56,6 +56,7 @@ void InitCombatant2(Fighter* f, long character)
 	f->f_jump = 0;
 	f->char_flag = character;
 	f->stun_timer = 0;
+	f->t = clock();
 }
 /* Gets the key strokes from the user and applys the approriate flags to the player character */
 void FighterPull(Fighter* f1, Uint8* keys)
@@ -962,7 +963,6 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 /* Updates the logic for each fighter */
 void FighterController(Fighter* f1, Fighter* f2, int player_number)
 {
-	clock_t t;
 	f1->f_jump = NULL;
 	if(f1->stun_timer <= 0 && f1->shield_stun <= 0 && f1->health > 0) 
 	{
@@ -1037,6 +1037,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->health -= f1->light_dmg;
 					f2->stun_timer = 3;
 				}
+				/* Applies Knockback to the opposing character */
 				if(f1->x < f2->x && f2->health > 0 && f2->x > 0 && f2->x < 845)
 				{
 					f2->x += f1->light_knb;
@@ -1048,7 +1049,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->hitbox.x -= f1->light_knb;
 				}
 				++f1->combo_count;
-				t = clock();
+				f1->t = clock(); /* Resets the time of last hit to now */
 			}
 			else if(has_hit == 1 && f2->flags == FIGHTERFLAG_BLOCK)
 			{
@@ -1082,7 +1083,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->hitbox.x -= f1->med_knb;
 				}
 				++f1->combo_count;
-				t = clock();
+				f1->t = clock();
 			}
 			else if(has_hit == 1 && f2->flags == FIGHTERFLAG_BLOCKL)
 			{
@@ -1116,7 +1117,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->hitbox.x -= f1->hev_knb;
 				}
 				++f1->combo_count;
-				t = clock();
+				f1->t = clock();
 			}
 			else if(has_hit == 1 && f2->flags == FIGHTERFLAG_BLOCK)
 			{
@@ -1136,7 +1137,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 			{
 				f2->health -= f1->launch_dmg;
 				++f1->combo_count;
-				t = clock();
+				f1->t = clock();
 			}
 		}	
 		if(f1->flags == FIGHTERFLAG_JUMP)
@@ -1173,7 +1174,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 			f1->f_jump = NULL;
 		}
 	}
-	t = clock() - t;
+	f1->t = clock() - f1->t;
 	if(f1->stun_timer > 0 && f1->health > 0)
 		--f1->stun_timer;
 	if(f1->stun_timer < 0 && f1->health > 0)
@@ -1182,7 +1183,7 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 		--f1->shield_stun;
 	if(f1->shield_stun < 0 && f1->health > 0)
 		f1->shield_stun = 0;
-	if(f2->stun_timer <= 0 && f2->health > 0 && ((float)t/CLOCKS_PER_SEC) == 2.0)
+	if(f2->stun_timer <= 0 && f2->health > 0 && ((float)f1->t/CLOCKS_PER_SEC) == 2.0) /* two seconds must pass before scaling no longer applies */
 		f1->combo_count = 0;
 }
 /* Frees the memory that is held by the fighter */
@@ -1387,11 +1388,8 @@ int EditFighter()
 
 	return 0;
 
-	/*
-	Special thanks to Matt Downey for forcing the program to print 10000 new lines instead of closing the file so
-	it would write the data that I needed
-	
-	int i;
+	/*int i;
+
 	for(i = 0; i < 100000;i++)
 	{
 		fprintf(pFile,"\n");
