@@ -1387,8 +1387,11 @@ int EditFighter()
 
 	return 0;
 
-	/*int i;
-
+	/*
+	Special thanks to Matt Downey for forcing the program to print 10000 new lines instead of closing the file so
+	it would write the data that I needed
+	
+	int i;
 	for(i = 0; i < 100000;i++)
 	{
 		fprintf(pFile,"\n");
