@@ -97,6 +97,10 @@ typedef struct Fighter_T
 	int launch_dmg;
 
 	int frame;
+
+	int light_knb;
+	int med_knb;
+	int hev_knb;
 }Fighter;
 
 void InitCombatant(Fighter* f, long character); /* Initializes the spawns and values for the fighter */
