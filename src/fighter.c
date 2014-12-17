@@ -1037,12 +1037,12 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->health -= f1->light_dmg;
 					f2->stun_timer = 3;
 				}
-				if(f1->x < f2->x)
+				if(f1->x < f2->x && f2->health > 0)
 				{
 					f2->x += f1->light_knb;
 					f2->hitbox.x += f1->light_knb;
 				}
-				else
+				else if(f1->x > f2->x && f2->health > 0)
 				{
 					f2->x -= f1->light_knb;
 					f2->hitbox.x -= f1->light_knb;
@@ -1071,12 +1071,12 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->health -= f1->med_dmg;
 					f2->stun_timer = 5;
 				}
-				if(f1->x < f2->x)
+				if(f1->x < f2->x && f2->health > 0)
 				{
 					f2->x += f1->med_knb;
 					f2->hitbox.x += f1->med_knb;
 				}
-				else
+				else if(f1->x > f2->x && f2->health > 0)
 				{
 					f2->x -= f1->med_knb;
 					f2->hitbox.x -= f1->med_knb;
@@ -1105,12 +1105,12 @@ void FighterController(Fighter* f1, Fighter* f2, int player_number)
 					f2->health -= f1->hev_dmg;
 					f2->stun_timer = 7;
 				}
-				if(f1->x < f2->x)
+				if(f1->x < f2->x && f2->health > 0)
 				{
 					f2->x += f1->hev_knb;
 					f2->hitbox.x += f1->hev_knb;
 				}
-				else
+				else if(f1->x > f2->x && f2->health > 0)
 				{
 					f2->x -= f1->hev_knb;
 					f2->hitbox.x -= f1->hev_knb;
