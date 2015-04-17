@@ -29,7 +29,7 @@ ScreenData  S_Data;
 
 void Init_Graphics()
 {
-    Uint32 Vflags = SDL_FULLSCREEN | SDL_ANYFORMAT;
+    Uint32 Vflags =  SDL_ANYFORMAT;
     Uint32 HWflag = 0;
     SDL_Surface *temp;
     S_Data.xres = 1024;
@@ -56,7 +56,7 @@ void Init_Graphics()
         S_Data.xres = 1024;
         S_Data.yres = 768;
         S_Data.depth = 32;
-        Vflags = SDL_FULLSCREEN | SDL_ANYFORMAT | SDL_HWSURFACE;
+        Vflags =  SDL_ANYFORMAT | SDL_HWSURFACE;
         HWflag = SDL_HWSURFACE;
     }
     else if(SDL_VideoModeOK(1024, 768, 16, SDL_FULLSCREEN | SDL_ANYFORMAT | SDL_HWSURFACE))
@@ -64,7 +64,7 @@ void Init_Graphics()
         S_Data.xres = 1024;
         S_Data.yres = 768;
         S_Data.depth = 16;
-        Vflags = SDL_FULLSCREEN | SDL_ANYFORMAT | SDL_HWSURFACE;
+        Vflags =  SDL_ANYFORMAT | SDL_HWSURFACE;
         HWflag = SDL_HWSURFACE;
     }
     else if(SDL_VideoModeOK(1024, 768, 16, SDL_FULLSCREEN | SDL_ANYFORMAT))
@@ -72,7 +72,7 @@ void Init_Graphics()
         S_Data.xres = 1024;
         S_Data.yres = 768;
         S_Data.depth = 16;
-        Vflags = SDL_FULLSCREEN | SDL_ANYFORMAT;
+        Vflags =  SDL_ANYFORMAT;
         HWflag = SDL_SWSURFACE;
     }
     videobuffer = SDL_SetVideoMode(S_Data.xres, S_Data.yres,S_Data.depth, Vflags);
@@ -120,7 +120,7 @@ void NextFrame()
   Then = NOW;									/*these next few lines  are used to show how long each frame takes to update.  */
   NOW = SDL_GetTicks();
   fprintf(stdout,"Ticks passed this frame: %i\n", NOW - Then);
-  FrameDelay(16); /*this will make your frame rate about 30 frames per second.  If you want 60 fps then set it to about 15 or 16*/
+  FrameDelay(15); /*this will make your frame rate about 30 frames per second.  If you want 60 fps then set it to about 15 or 16*/
 }
 
 /*
@@ -268,10 +268,9 @@ void CloseSprites()
    }
 }
 
-void DrawSprite(Sprite *sprite,SDL_Surface *surface,int sx,int sy)
+void DrawSprite(Sprite *sprite,SDL_Surface *surface,int sx,int sy, int frame)
 {
     SDL_Rect src,dest;
-	int frame = sprite->animations[sprite->current_animation].frame;
     src.x = frame%sprite->framesperline * sprite->w;
     src.y = frame/sprite->framesperline * sprite->h;
     src.w = sprite->w;
@@ -281,6 +280,7 @@ void DrawSprite(Sprite *sprite,SDL_Surface *surface,int sx,int sy)
     dest.w = sprite->w;
     dest.h = sprite->h;
     SDL_BlitSurface(sprite->image, &src, surface, &dest);
+  
 }
 
 /*
@@ -761,103 +761,4 @@ void DrawMouse()
 	Mouse.x = mx;
 	Mouse.y = my;
 }
-void SetAnimation(Sprite_T *sprite, animations anim)
-{
-	sprite->current_animation = anim;
-	sprite->current_frame = 0;
-	sprite->next_frame = sprite->animations[anim].frame_length[0]; //+ gCurrentTime;
-}
-void Draw(Game_T* game, SDL_Surface* buffer)
-{
-	//Draw the current stage
-  if(game->stage != NULL)
-    SDL_BlitSurface(game->stage->image,NULL,game->buffer,NULL);
-  if(game->f1->flags &= FIGHTFLAG_IDLE)
-  {
-	  	game->f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
-		DrawSprite(game->f1->sprite,buffer,game->f1->x, game->f1->y,0);
-  }
-  else if(game->f1->flags &= FIGHTFLAG_WALKL)
-  {
-	  	game->f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
-		DrawSprite(game->f1->sprite,buffer,game->f1->x - game->f1->walk_acc, game->f1->y,0);
-  }
-  else if(game->f1->flags &= FIGHTFLAG_WALKR)
-  {
-	  	game->f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
-		DrawSprite(game->f1->sprite,buffer,game->f1->x + game->f1->walk_acc,game->f1->y,0)
-  }
-  else if(game->f1->flags &= FIGHTFLAG_LIGHTATT)
-  {
-		game->f1->sprite = LoadSprite("images/StriderLightAttack.png",179,138);
-		DrawSprite(game->f1->sprite,buffer,game->f1->x,game->f1->y,0)
-  }
-  else if(game->f1->flags &= FIGHTFLAG_MEDATT)
-  {
-	  game->f1->sprite = LoadSprite("images/StriderMediumAttack.png",198,140);
-	  DrawSprite(game->f1->sprite,buffer,game->f1->x,game->f1->y,0)
-  }
-  else if(game->f1->flags &= FIGHTFLAG_HEVATT)
-  {
-	  	f1->sprite = LoadSprite("images/StriderHeavyAttack.png",206,140);
-		DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
-  }
-  else if(game->f1->flags &= FIGHTFLAG_LAUNCH)
-  {
-	  f1->sprite = LoadSprite("images/StriderLauncherAttack.png",198,162);
-	  DrawSprite(f1->sprite,buffer,f1->x, f1->y,F_Sprite.frame);
-  }
-  game->f1->sprite = NULL;
-	if(game->f1->sprite != NULL)
-	{
-		FreeSprite(game->f1->sprite);
-	}
-}
-void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y)
-{
-	for(int i=0; i<f->health;++i)
-		for(int j=0; j < 30; ++j)
-			DrawPixel(buffer,0,255,0,(30 + i) + x,(30 + j) + y);
-}
-struct
-{
-	int x;
-	int y;
-	int w;
-	int h;
-	int last_x;
-	int last_y;
-}F_Bck;
 
-void InitBck()
-{
-	F_Bck.x=0;
-	F_Bck.y=0;
-	F_Bck.w=0;
-	F_Bck.h=0;
-	F_Bck.last_x=0;
-	F_Bck.last_y=0;
-}
-
-void Parallax(Sprite* fst, Sprite* scd, SDL_Surface* screen, int x, int y)
-{
-	for(int i = 0; i < 40; ++i)
-	{
-		DrawSprite(fst,screen,F_Bck.x+32, 510,0);
-		F_Bck.last_x = F_Bck.x; 
-		F_Bck.x = F_Bck.last_x + 32;
-	}
-	for(int j = 0; j < 80; ++j)
-	{
-		DrawSprite(scd,screen,F_Bck.x + 64, 610, 2);
-		F_Bck.last_x = F_Bck.x; 
-		F_Bck.x = F_Bck.last_x + 32;
-	}
-}
-void FreeBck(Sprite* fst, Sprite* scd)
-{
-	FreeSprite(fst);
-	FreeSprite(scd);
-	fst = NULL;
-	scd = NULL;
-}

@@ -11,8 +11,6 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
-#include "game.h"
-#include "fighter.h"
 
 /*uint32*/
 #define Red_         0xDD0000
@@ -55,34 +53,13 @@ enum colors {Red = 1,Green = 2,Blue = 3,Yellow = 4,Orange = 5,Violet = 6,Brown =
                LightGreen = 18,LightBlue = 19,LightYellow = 20,LightOrange = 21,LightViolet = 22,LightBrown = 23,LightGrey = 24,
                Black = 25,White = 26,Tan = 27,Gold = 28,Silver = 29,YellowGreen = 30,Cyan = 31,Magenta = 32};
 
-enum animations { ANIMATION_IDLE, 
-				  ANIMATION_WALKL,
-				  ANIMATION_WALKR,
-				  ANIMATION_CROUCH,
-				  ANIMATION_JUMP,
-				  ANIMATION_ATTL,
-				  ANIMATION_ATTM,
-				  ANIMATION_ATTH,
-				  ANIMATION_LAUNCH};
-
-typedef struct Animation_T
-{
-	int frame[16];
-	int frame_length[16];
-};
-
 typedef struct Sprite_T
 {
   SDL_Surface *image;		/*pointer to the actual image in memory*/
-  Animation_T animations[15];
-  int current_animation;
-  int current_sprite;
-  int current_frame;
-  int next_frame;
-  char filename[20];		/*the name of the file, keep them short*/
+  char filename[20];			/*the name of the file, keep them short*/
   int w, h;					/*the width and height of the frames of the sprites, not the file itself*/
-  int framesperline;		/*default is 16*/
-  int color1,color2,color3;	/*if the file was palette swapped these are the colors that were changed*/
+  int framesperline;			/*default is 16*/
+  int color1,color2,color3;		/*if the file was palette swapped these are the colors that were changed*/
   int used;					/*used by the maintanenc functions to keep track of how many times a single sprite is being used*/
 }Sprite;
 
@@ -90,12 +67,6 @@ typedef struct	/*this didn't need to be its own type, its only used once*/
 {
     int xres,yres,depth;
 }ScreenData;
-
-typedef struct Stage_T
-{
-	int x;
-	int y;
-};
 
 void Init_Graphics();
 void DrawPixel(SDL_Surface *screen, Uint8 R, Uint8 G, Uint8 B, int x, int y);
@@ -117,12 +88,5 @@ void ResetBuffer();
 void NextFrame();
 void InitMouse();
 void DrawMouse();
-
-void Draw(Game_T* game, SDL_Surface *buffer);
-void SetAnimation(Sprite_T *sprite, animations anim);
-void DrawHealthBar(Fighter* f, SDL_Surface *buffer, int x, int y);
-void InitBck();
-void Parallax(Sprite* fst, Sprite* scd, SDL_Surface* screen, int x, int y);
-void FreeBck(Sprite* fst, Sprite* scd);
 
 #endif
