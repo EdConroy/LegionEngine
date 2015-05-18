@@ -1,0 +1,8 @@
+health: 450
+light: 15
+medium: 23
+heavy: 35
+launcher: 150
+lightknockback: 2
+mediumknockback: 2
+heavyknockback: 2
