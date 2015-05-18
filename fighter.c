@@ -205,7 +205,7 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	int frame_count;
 	if(f1->health <= 0)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderDeath.png",164,92);
@@ -230,7 +230,7 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_HITSTUN)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderHitstun.png",107,91);
@@ -255,7 +255,7 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_WALKL)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
@@ -284,7 +284,6 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_WALKR)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
@@ -313,7 +312,6 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_CROUCH)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderCrouch.png",108,68);
@@ -342,7 +340,6 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_JUMP)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
@@ -371,7 +368,6 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_LIGHT)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderLightAttack.png",179,138);
@@ -400,7 +396,6 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_MED)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderMediumAttack.png",198,140);
@@ -429,7 +424,6 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_HEV)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderHeavyAttack.png",206,140);
@@ -458,7 +452,7 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_LAUNCH)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderLauncherAttack.png",198,162);
@@ -487,7 +481,7 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_BLOCK)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderBlock.png",103,110);
@@ -516,7 +510,7 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_BLOCKL)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderBlock.png",103,110);
@@ -545,7 +539,7 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	else
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
@@ -574,18 +568,13 @@ void DrawFighter1(Fighter* f1, SDL_Surface *buffer)
 	}
 	DrawSprite(f1->sprite,buffer,f1->x, f1->y,f1->frame);
 	f1->frame = (f1->frame + 1) % frame_count;
-	f1->sprite = NULL;
-	if(f1->sprite != NULL)
-	{
-		FreeSprite(f1->sprite);
-	}
 }
 void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 {
 	int frame_count2;
 		if(f1->health <= 0)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderDeath.png",164,92);
@@ -610,7 +599,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_HITSTUN)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderHitstun.png",107,91);
@@ -635,7 +624,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_WALKL)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
@@ -664,7 +653,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_WALKR)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderWalk.png",114,101);
@@ -693,7 +682,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_CROUCH)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderCrouch.png",108,68);
@@ -722,7 +711,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_JUMP)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
@@ -751,7 +740,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_LIGHT)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderLightAttack.png",179,138);
@@ -780,7 +769,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_MED)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderMediumAttack.png",198,140);
@@ -809,7 +798,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_HEV)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderHeavyAttack.png",206,140);
@@ -838,7 +827,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_LAUNCH)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderLauncherAttack.png",198,162);
@@ -867,7 +856,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_BLOCK)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderBlock.png",103,110);
@@ -896,7 +885,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else if(f1->anim_flags == ANIMFLAG_BLOCKL)
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderBlock.png",103,110);
@@ -925,7 +914,7 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	else
 	{
-		if(f1->sprite != NULL) FreeSprite(f1->sprite);
+		
 		if(f1->char_flag == FIGHT_STRIDER)
 		{
 			f1->sprite = LoadSprite("images/StriderIdle.png",114,92);
@@ -954,11 +943,6 @@ void DrawFighter2(Fighter* f1, SDL_Surface* buffer)
 	}
 	DrawSprite(f1->sprite,buffer,f1->x, f1->y,f1->frame);
 	f1->frame = (f1->frame + 1) % frame_count2;
-	f1->sprite = NULL;
-	if(f1->sprite != NULL)
-	{
-		FreeSprite(f1->sprite);
-	}
 }
 /* Updates the logic for each fighter */
 void FighterController(Fighter* f1, Fighter* f2, int player_number)
